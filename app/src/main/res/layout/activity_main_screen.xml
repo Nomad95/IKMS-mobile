@@ -10,7 +10,56 @@
     tools:context="com.pollub.ikms.ikms_mobile.MainScreen">
 
     <TextView
+        android:id="@+id/username_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_marginTop="147dp"
+        android:text="Username"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="33dp" />
+
+    <EditText
+        android:id="@+id/username_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/username_label"
+        android:layout_alignBottom="@+id/username_label"
+        android:layout_marginStart="28dp"
+        android:layout_toEndOf="@+id/username_label"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <TextView
+        android:id="@+id/password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username_value"
+        android:layout_marginTop="32dp"
+        android:layout_toStartOf="@+id/username_value"
+        android:text="Password"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <EditText
+        android:id="@+id/password_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/password_label"
+        android:layout_alignBottom="@+id/password_label"
+        android:layout_alignStart="@+id/username_value"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <Button
+        android:id="@+id/zaloguj_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/password_value"
+        android:layout_below="@+id/password_value"
+        android:layout_marginTop="39dp"
+        android:text="Zaloguj" />
+
 </RelativeLayout>

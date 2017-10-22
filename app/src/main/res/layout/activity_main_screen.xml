@@ -50,7 +50,7 @@
         android:layout_alignBottom="@+id/password_label"
         android:layout_alignStart="@+id/username_value"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <Button
@@ -72,5 +72,16 @@
         android:layout_above="@+id/username_value"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="17dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="22dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/zaloguj_button" />
+
 
 </RelativeLayout>

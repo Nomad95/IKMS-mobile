@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pollub.ikms.ikms_mobile.request.LoginRequest;
@@ -38,9 +39,9 @@ public class MainScreen extends AppCompatActivity {
         zalogujButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // musze poczytać o asynchronicznych operacjach w połączeniu ze spinnerem bo chyba nie działa
                 spinner.setVisibility(View.VISIBLE);
                 login(v);
-                spinner.setVisibility(View.GONE);
             }
         });
     }
@@ -67,11 +68,11 @@ public class MainScreen extends AppCompatActivity {
         private String username;
         private String password;
 
+
         @Override
         protected TokenResponse doInBackground(Void... params) {
 
-            //TODO Zmienić endpoint na IKMS
-            final String url = "http://wkitchen.eu-central-1.elasticbeanstalk.com/auth";
+            final String url = "https://ikmsdeploy.herokuapp.com/auth/login";
             RestTemplate restTemplate = new RestTemplate();
             TokenResponse token = new TokenResponse();
             try {
@@ -97,6 +98,10 @@ public class MainScreen extends AppCompatActivity {
 
         }
 
+        @Override
+        protected void onPostExecute(TokenResponse tokenResponse) {
+            spinner.setVisibility(View.GONE);
+        }
     }
 
     public void redirectToMainUserPage(View v){

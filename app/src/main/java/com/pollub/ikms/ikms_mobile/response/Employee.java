@@ -9,18 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserAccount {
+public class Employee {
 
-    @JsonProperty("email")
-    private String email;
+    @JsonProperty("id")
+    private Long id;
 
-    @JsonProperty("country")
-    private String country;
+    @JsonProperty("employeeRole")
+    private String employeeRole;
 
-    @JsonProperty("nick")
-    private String nick;
-
-    @JsonProperty("authorities")
-    private String authorities;
-
+    @JsonProperty("nip")
+    private String nip;
 }

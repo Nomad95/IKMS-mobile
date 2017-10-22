@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.pollub.ikms.ikms_mobile.response.UserAccount;
+import com.pollub.ikms.ikms_mobile.response.Employee;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,16 +35,14 @@ public class MainUserPanelActivity extends AppCompatActivity {
 
         FetchDataTask fetchDataTask = new FetchDataTask();
         try {
-            UserAccount myUserAccount = fetchDataTask.execute().get().getBody();
+            Employee myEmployee = fetchDataTask.execute().get().getBody();
             // TODO do usunięcia po zmianie endpointów kuchni
             TextView textView = (TextView) findViewById(R.id.response_value);
-                   textView.append("Nick: " + myUserAccount.getNick());
+                   textView.append("ID: " + myEmployee.getId());
             textView.append("\n");
-            textView.append("Email: "+ myUserAccount.getEmail());
+            textView.append("Rola: "+ myEmployee.getEmployeeRole());
             textView.append("\n");
-            textView.append("Rola: "+ myUserAccount.getAuthorities());
-            textView.append("\n");
-            textView.append("Kraj: "+ myUserAccount.getCountry());
+            textView.append("Nip: "+ myEmployee.getNip());
             textView.append("\n");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -55,22 +53,21 @@ public class MainUserPanelActivity extends AppCompatActivity {
 
     }
 
-    //TODO Zmienić UserAccount w całym obrębie klasy FetchDataTask na dany response z IKMSu
-    private class FetchDataTask extends AsyncTask<Void, Void, ResponseEntity<UserAccount>> {
+    private class FetchDataTask extends AsyncTask<Void, Void, ResponseEntity<Employee>> {
         @Override
-        protected ResponseEntity<UserAccount> doInBackground(Void... params) {
+        protected ResponseEntity<Employee> doInBackground(Void... params) {
             try {
-                //TODO Zmienić endpoint na IKMS
-                String url = "http://wkitchen.eu-central-1.elasticbeanstalk.com/api/user/account/intelcan";
+                //Pobieramy podstawowe dane o pracowniku z id 1 do testów
+                String url = "https://ikmsdeploy.herokuapp.com//api/employee/1";
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.set("X-Auth-Token", token);
+                headers.set("Auth-Token", token);
 
                 HttpEntity<String> entity = new HttpEntity<>(headers);
-                ResponseEntity<UserAccount> response = restTemplate
-                        .exchange(url, HttpMethod.GET, entity, UserAccount.class);
+                ResponseEntity<Employee> response = restTemplate
+                        .exchange(url, HttpMethod.GET, entity, Employee.class);
                 return response;
 
             } catch (Exception e) {
@@ -81,9 +78,9 @@ public class MainUserPanelActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ResponseEntity<UserAccount> result) {
+        protected void onPostExecute(ResponseEntity<Employee> result) {
             HttpStatus status = result.getStatusCode();
-            UserAccount userAccount = result.getBody();
+            Employee employee = result.getBody();
         }
 
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,12 +14,12 @@
         android:id="@+id/username_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="147dp"
         android:text="Username"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_alignParentTop="true"
+        android:layout_marginStart="31dp"
+        android:layout_above="@+id/password_label"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="33dp" />
+        android:layout_marginBottom="19dp" />
 
     <EditText
         android:id="@+id/username_value"
@@ -36,11 +37,10 @@
         android:id="@+id/password_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/username_value"
-        android:layout_marginTop="32dp"
-        android:layout_toStartOf="@+id/username_value"
         android:text="Password"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/username_value" />
 
     <EditText
         android:id="@+id/password_value"
@@ -57,9 +57,20 @@
         android:id="@+id/zaloguj_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/password_value"
+        android:layout_marginTop="36dp"
+        android:text="Zaloguj"
         android:layout_below="@+id/password_value"
-        android:layout_marginTop="39dp"
-        android:text="Zaloguj" />
+        android:layout_alignStart="@+id/password_value" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        app:srcCompat="@drawable/ikms"
+        android:layout_above="@+id/username_value"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp" />
 
 </RelativeLayout>

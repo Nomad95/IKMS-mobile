@@ -4,6 +4,11 @@ android {
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
 
+    lintOptions {
+        abortOnError false
+    }
+
+
     defaultConfig {
         applicationId "com.pollub.ikms.ikms_mobile"
         minSdkVersion 21

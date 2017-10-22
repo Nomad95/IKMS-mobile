@@ -14,6 +14,7 @@ import com.pollub.ikms.ikms_mobile.request.LoginRequest;
 import com.pollub.ikms.ikms_mobile.response.TokenResponse;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.ExecutionException;
@@ -36,10 +37,10 @@ public class MainScreen extends AppCompatActivity {
                AuthorizationTokenTask authorizationTokenTask = new AuthorizationTokenTask();
                 try {
                     token = authorizationTokenTask.execute().get();
-                    if(token.getToken() != null){
+                    //TODO: Przydałoby się jakiś error handler zrobic później
+                    if(!(token.getToken().equals("denied") || token.getToken().equals("error"))){
                         redirectToMainUserPage(v);
                     } else {
-                        //TODO Nie działa bo wcześniej gdzieś łapie wyjątek w operacji asynchronicznej i wywala aplikacje po podaniu błędnych danych
                         Toast.makeText(getWindow().getContext(), "Zły username lub password", Toast.LENGTH_LONG).show();
                     }
                 } catch (InterruptedException e) {
@@ -62,18 +63,21 @@ public class MainScreen extends AppCompatActivity {
             //TODO Zmienić endpoint na IKMS
             final String url = "http://wkitchen.eu-central-1.elasticbeanstalk.com/auth";
             RestTemplate restTemplate = new RestTemplate();
+            TokenResponse token = new TokenResponse();
             try {
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 LoginRequest loginRequest = new LoginRequest();
                 loginRequest.setUsername(username);
                 loginRequest.setPassword(password);
-                TokenResponse token = restTemplate.postForObject(url, loginRequest, TokenResponse.class);
+                token = restTemplate.postForObject(url, loginRequest, TokenResponse.class);
 
                 return token;
+            } catch (HttpClientErrorException eh){
+                token.setToken("denied");
             } catch (Exception e) {
-                Log.e("MainActivity", e.getMessage(), e);
+                token.setToken("error");
             }
-            return null;
+            return token ;
         }
 
         @Override

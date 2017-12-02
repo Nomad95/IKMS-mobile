@@ -4,13 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pollub.ikms.ikms_mobile.MainUserPanelActivity">
-
-    <TextView
-        android:id="@+id/response_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="152dp"
-        tools:layout_editor_absoluteY="149dp" />
+    tools:context="com.pollub.ikms.ikms_mobile.NotificationDetailsActivity">
 
 </android.support.constraint.ConstraintLayout>

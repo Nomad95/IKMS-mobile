@@ -8,18 +8,18 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.pollub.ikms.ikms_mobile.MainScreen">
+    tools:context="com.pollub.ikms.ikms_mobile.LoginActivity">
 
     <TextView
         android:id="@+id/username_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginStart="31dp"
         android:layout_above="@+id/password_label"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="19dp" />
+        android:layout_marginBottom="19dp"
+        android:layout_marginStart="31dp"
+        android:text="Login"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <EditText
         android:id="@+id/username_value"
@@ -37,10 +37,10 @@
         android:id="@+id/password_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"
-        android:textAppearance="@style/TextAppearance.AppCompat"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/username_value" />
+        android:layout_toStartOf="@+id/username_value"
+        android:text="Hasło"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <EditText
         android:id="@+id/password_value"
@@ -54,35 +54,35 @@
         android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <Button
-        android:id="@+id/zaloguj_button"
+        android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/password_value"
+
         android:layout_below="@+id/password_value"
-        android:layout_marginTop="36dp"
-        android:onClick="showSpinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
         android:text="Zaloguj" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="400px"
         android:layout_height="400px"
-        android:adjustViewBounds="true"
-        android:cropToPadding="false"
-        app:srcCompat="@drawable/ikms"
         android:layout_above="@+id/username_value"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp" />
+        android:layout_marginBottom="17dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        app:srcCompat="@drawable/ikms" />
 
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginBottom="22dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/zaloguj_button" />
+        android:layout_alignStart="@+id/button_login"
+        android:layout_marginBottom="22dp"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

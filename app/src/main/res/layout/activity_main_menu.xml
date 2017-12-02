@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pollub.ikms.ikms_mobile.MainMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:dividerHorizontal"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:id="@+id/go_to_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|center">
+
+                <ImageView
+                    android:id="@+id/notifications_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/notifications"
+                    app:srcCompat="@drawable/icons_notifications" />
+
+                <TextView
+                    android:id="@+id/unread_notifications_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/notifications_icon"
+                    android:layout_alignRight="@id/notifications_icon"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginRight="-2dp"
+                    android:background="@drawable/rounded_circle"
+                    android:gravity="center"
+                    android:minHeight="20sp"
+                    android:minWidth="20sp"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="3"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/unread_notifications_counter"
+                    android:fontFamily="sans-serif"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="14dp"
+                    android:text="Powiadomienia"
+                    android:textSize="26sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/go_to_messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|center">
+
+                <ImageView
+                    android:id="@+id/messages_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/messages"
+                    app:srcCompat="@drawable/icons_messages" />
+
+                <TextView
+                    android:id="@+id/unread_messages_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/messages_icon"
+                    android:layout_alignRight="@id/messages_icon"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginRight="-2dp"
+                    android:background="@drawable/rounded_circle"
+                    android:gravity="center"
+                    android:minHeight="20sp"
+                    android:minWidth="20sp"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="10"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/unread_messages_counter"
+                    android:fontFamily="sans-serif"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="14dp"
+                    android:text="Wiadomości"
+                    android:textSize="26sp" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/go_to_call"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:baselineAligned="true"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|center">
+
+                <ImageView
+                    android:id="@+id/call_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/call"
+                    app:srcCompat="@drawable/icons_call" />
+
+                <TextView
+                    android:id="@+id/unread_calls_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/call_icon"
+                    android:layout_alignRight="@id/call_icon"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginRight="-2dp"
+                    android:background="@drawable/rounded_circle"
+                    android:gravity="center"
+                    android:minHeight="20sp"
+                    android:minWidth="20sp"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="10"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    tools:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/unread_calls_counter"
+                    android:fontFamily="sans-serif"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="14dp"
+                    android:text="Zadzwoń"
+                    android:textSize="26sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

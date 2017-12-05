@@ -6,11 +6,13 @@ package com.pollub.ikms.ikms_mobile.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import java.text.DateFormat;
 import java.util.Date;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 public class NotificationResponse {
@@ -22,7 +24,7 @@ public class NotificationResponse {
     private String content;
 
     @JsonProperty("dateOfSend")
-    private Date dateOfSend;
+    private String dateOfSend;
 
     @JsonProperty("wasRead")
     private Boolean wasRead;

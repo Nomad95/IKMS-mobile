@@ -1,5 +1,6 @@
 package com.pollub.ikms.ikms_mobile;
 
+import android.app.LoaderManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,7 +8,9 @@ import android.app.ProgressDialog;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -42,7 +45,7 @@ import lombok.SneakyThrows;
 /**
  * Created by ATyKondziu on 03.11.2017.
  */
-public class MyNotificationsListActivity extends AppCompatActivity {
+public class MyNotificationsListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private String token;
 
@@ -137,144 +140,167 @@ public class MyNotificationsListActivity extends AppCompatActivity {
                         builder.setContentText(notifications[i].getNotifications().get(0).getContent());
 
                     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            |Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
-                            |Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                            | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+                            | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     builder.setContentIntent(contentIntent);
+                } else {
+                    for (NotificationResponse notification : notifications[i].getNotifications()) {
+                        listOfNotificationsForListView.add(new NotificationItemModel(
+                                notification.getId(),
+                                notifications[i].getSenderFullName(),
+                                notification.getContent(),
+                                notification.getWasRead()));
+
+                    }
                 }
-
-                if (notifications[i].getNumberOfUnread() != 0) {
-                    builder.setAutoCancel(true)
-                            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
-                    mNotificationManager.notify(i, builder.build());
-
-
-                }
-            }
-
-            lv = (ListView) findViewById(R.id.lvNotifications);
-            adapter = new NotificationAdapter(this, 0, listOfNotificationsForListView);
-            lv.setAdapter(adapter);
-
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                    NotificationItemModel item = listOfNotificationsForListView.get(index);
-                    if (!item.isRead()) {
-
-                        ReadNotificationTask readNotificationTask = new ReadNotificationTask(
-                                item.getId().intValue()
-                        );
-
-                        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                        dialog = new ProgressDialog(MyNotificationsListActivity.this);
-                        dialog.setMessage("Przetwarzanie...");
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        new Handler().postDelayed(new Runnable() {
-                            public void run() {
-                                dialog.dismiss();
-                            }
-                        }, TWO_SECONDS);
-
-                        readNotificationTask.execute();
-
-                        mNotificationManager.cancel(item.getId().intValue());
+                    if (notifications[i].getNumberOfUnread() != 0) {
+                        builder.setAutoCancel(true)
+                                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+                        mNotificationManager.notify(i, builder.build());
 
 
-                        Intent intent = new Intent(MyNotificationsListActivity.this, MyNotificationsListActivity.class);
-
-                        //based on item add info to intent
-                        startActivity(intent);
                     }
                 }
 
+                lv = (ListView) findViewById(R.id.lvNotifications);
+                adapter = new NotificationAdapter(this, 0, listOfNotificationsForListView);
+                lv.setAdapter(adapter);
 
-            });
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                        NotificationItemModel item = listOfNotificationsForListView.get(index);
+                        if (!item.isRead()) {
+
+                            ReadNotificationTask readNotificationTask = new ReadNotificationTask(
+                                    item.getId().intValue()
+                            );
+
+                            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                            dialog = new ProgressDialog(MyNotificationsListActivity.this);
+                            dialog.setMessage("Przetwarzanie...");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                            new Handler().postDelayed(new Runnable() {
+                                public void run() {
+                                    dialog.dismiss();
+                                }
+                            }, TWO_SECONDS);
+
+                            readNotificationTask.execute();
+
+                            mNotificationManager.cancel(item.getId().intValue());
+
+
+                            Intent intent = new Intent(MyNotificationsListActivity.this, MyNotificationsListActivity.class);
+
+                            //based on item add info to intent
+                            startActivity(intent);
+                        }
+                    }
+
+
+                });
+
+
+            }
 
         }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 
 
     class FetchNotificationsTask extends AsyncTask<Void, Void, ResponseEntity<NotificationGroupedBySender[]>> {
-        @Override
-        protected ResponseEntity<NotificationGroupedBySender[]> doInBackground(Void... params) {
-            try {
-                //Pobieramy wszystkie powiadomienia dla danego użytkownika
-                String url = UrlManager.getInstance().MY_NOTIFICATIONS_URL;
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.set("Auth-Token", token);
+            @Override
+            protected ResponseEntity<NotificationGroupedBySender[]> doInBackground(Void... params) {
+                try {
+                    //Pobieramy wszystkie powiadomienia dla danego użytkownika
+                    String url = UrlManager.getInstance().MY_NOTIFICATIONS_URL;
+                    RestTemplate restTemplate = new RestTemplate();
+                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    headers.set("Auth-Token", token);
 
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                ResponseEntity<NotificationGroupedBySender[]> response = restTemplate
-                        .exchange(url, HttpMethod.GET, entity, NotificationGroupedBySender[].class);
-                return response;
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+                    ResponseEntity<NotificationGroupedBySender[]> response = restTemplate
+                            .exchange(url, HttpMethod.GET, entity, NotificationGroupedBySender[].class);
+                    return response;
 
-            } catch (Exception e) {
-                String message = e.getMessage();
+                } catch (Exception e) {
+                    String message = e.getMessage();
+                }
+                return null;
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(ResponseEntity<NotificationGroupedBySender[]> result) {
-            super.onPostExecute(result);
-            HttpStatus status = result.getStatusCode();
-            NotificationGroupedBySender[] notification = result.getBody();
-            progressDialog.dismiss();
-        }
-    }
-
-    class ReadNotificationTask extends AsyncTask<Void, Void, Void> {
-
-        Integer index;
-
-        public ReadNotificationTask(Integer index) {
-            this.index = index;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                String url = UrlManager.getInstance().READ_NOTIFICATION_URL + index;
-                RestTemplate restTemplate = new RestTemplate();
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.set("Auth-Token", token);
-
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
-                response.getBody();
-            } catch (Exception e) {
-                String message = e.getMessage();
+            @Override
+            protected void onPostExecute(ResponseEntity<NotificationGroupedBySender[]> result) {
+                super.onPostExecute(result);
+                HttpStatus status = result.getStatusCode();
+                NotificationGroupedBySender[] notification = result.getBody();
+                progressDialog.dismiss();
             }
-            return null;
-        }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            redirectToMainMenuActivity();
-            return true;
         }
 
-        return super.onKeyDown(keyCode, event);
-    }
+        class ReadNotificationTask extends AsyncTask<Void, Void, Void> {
+
+            Integer index;
+
+            public ReadNotificationTask(Integer index) {
+                this.index = index;
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    String url = UrlManager.getInstance().READ_NOTIFICATION_URL + index;
+                    RestTemplate restTemplate = new RestTemplate();
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    headers.set("Auth-Token", token);
+
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+                    ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
+                    response.getBody();
+                } catch (Exception e) {
+                    String message = e.getMessage();
+                }
+                return null;
+            }
+        }
+
+        @Override
+        public boolean onKeyDown ( int keyCode, KeyEvent event){
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                redirectToMainMenuActivity();
+                return true;
+            }
+
+            return super.onKeyDown(keyCode, event);
+        }
 
     public void redirectToMainMenuActivity() {
         Intent intent = new Intent(this, MainMenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
-                |Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
-                |Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+                | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         prefs.edit().putString(tokenKey, token).apply();
         startActivityForResult(intent, 1);
         finish();

@@ -50,7 +50,7 @@
                     android:paddingBottom="1dp"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:text="3"
+                    android:text="7"
                     android:textColor="#ffffffff"
                     android:textSize="12sp" />
 

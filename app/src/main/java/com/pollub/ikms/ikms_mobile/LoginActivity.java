@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements RequestResultRec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         prefs = this.getSharedPreferences(
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);
         progressDialog = new ProgressDialog(LoginActivity.this);
@@ -93,8 +94,8 @@ public class LoginActivity extends AppCompatActivity implements RequestResultRec
         switch (resultCode) {
             case LoginService.STATUS_RUNNING:
                 progressDialog = new ProgressDialog(LoginActivity.this);
-                progressDialog.setMessage("Proszę czekać..");
                 progressDialog.setTitle("Logowanie");
+                progressDialog.setMessage("Proszę czekać..");
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(true);
                 progressDialog.show();

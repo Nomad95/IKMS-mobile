@@ -10,6 +10,9 @@ import java.util.List;
 @Data
 public class NotificationGroupedBySender {
 
+    @JsonProperty("senderId")
+    private Long senderId;
+
     @JsonProperty("senderFullName")
     private String senderFullName;
 

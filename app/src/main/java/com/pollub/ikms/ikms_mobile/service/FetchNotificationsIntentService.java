@@ -2,22 +2,21 @@ package com.pollub.ikms.ikms_mobile.service;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
-import android.app.ProgressDialog;
-import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.os.ResultReceiver;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.pollub.ikms.ikms_mobile.dto.NotificationGroupedBySenderDTO;
+import com.pollub.ikms.ikms_mobile.data.NotificationsContract;
+import com.pollub.ikms.ikms_mobile.data.NotificationsQueryHandler;
+import com.pollub.ikms.ikms_mobile.data.SendersContract;
+import com.pollub.ikms.ikms_mobile.dto.NotificationGroupedBySenderDto;
 import com.pollub.ikms.ikms_mobile.response.NotificationGroupedBySender;
+import com.pollub.ikms.ikms_mobile.response.NotificationResponse;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
 import org.springframework.http.HttpEntity;
@@ -29,16 +28,13 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import lombok.SneakyThrows;
 
 /**
  * Created by ATyKondziu on 18.11.2017.
  */
 
-public class NotificationService extends IntentService {
+public class FetchNotificationsIntentService extends IntentService {
     public static final int STATUS_RUNNING = 0;
     public static final int STATUS_FINISHED = 1;
     public static final int STATUS_ERROR = 2;
@@ -50,21 +46,25 @@ public class NotificationService extends IntentService {
     private SharedPreferences prefs;
     private String tokenKey = "com.pollub.ikms.ikms_mobile.token";
 
-    private List<NotificationGroupedBySenderDTO> allNotificationsDTO;
+    private List<NotificationGroupedBySenderDto> allNotificationsDTO;
 
-    ResponseEntity<NotificationGroupedBySender[]> response;
+    private ResponseEntity<NotificationGroupedBySender[]> response;
 
-    public NotificationService() {
+    private NotificationsQueryHandler handler;
+
+    public FetchNotificationsIntentService() {
         super(TAG);
     }
 
     @SuppressLint("RestrictedApi")
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Log.d(TAG, "Service Started!");
+        Log.d(TAG, "FetchNotificationsIntentService Started!");
         prefs = this.getSharedPreferences(
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);
         token = prefs.getString(tokenKey, "");
+        handler = new NotificationsQueryHandler(getContentResolver());
+
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
         Bundle notificationsBundle = new Bundle();
         receiver.send(STATUS_RUNNING, notificationsBundle);
@@ -83,19 +83,19 @@ public class NotificationService extends IntentService {
             receiver.send(STATUS_ERROR, notificationsBundle);
         }
 
-        Log.d(TAG, "Service Stopping!");
-        this.stopSelf();
+        Log.d(TAG, "FetchNotificationsIntentService Stopping!");
+       // this.stopSelf();
     }
 
     private int countAllUnreadMessage() {
         int counter = 0;
-        for (NotificationGroupedBySenderDTO notificationGroupedBySenderDTO : allNotificationsDTO) {
-            counter+=notificationGroupedBySenderDTO.getNumberOfUnread();
+        for (NotificationGroupedBySenderDto notificationGroupedBySenderDto : allNotificationsDTO) {
+            counter+= notificationGroupedBySenderDto.getNumberOfUnread();
         }
         return counter;
     }
 
-    @SneakyThrows
+
     private NotificationGroupedBySender[] getNotifications() {
         final String url = UrlManager.getInstance().MY_NOTIFICATIONS_URL;
         RestTemplate restTemplate = new RestTemplate();
@@ -111,9 +111,8 @@ public class NotificationService extends IntentService {
             return response.getBody();
         } else if (response.getStatusCode().value() == 401) {
             return null;
-        } else {
-            throw new NotificationService.FetchDataException("Nie udało się pobrać powiadomień");
         }
+        else return null;
     }
 
 
@@ -129,13 +128,29 @@ public class NotificationService extends IntentService {
         }
     }
 
-    public List<NotificationGroupedBySenderDTO> mapNotificationGroupedBySenderToDTOArrayList(NotificationGroupedBySender[] notifications) {
-        List<NotificationGroupedBySenderDTO> notificationsDTO = new ArrayList<>();
+    private List<NotificationGroupedBySenderDto> mapNotificationGroupedBySenderToDTOArrayList(NotificationGroupedBySender[] notifications) {
+        List<NotificationGroupedBySenderDto> notificationsDTO = new ArrayList<>();
         for (NotificationGroupedBySender notificationGroupedBySender : notifications) {
-            notificationsDTO.add(new NotificationGroupedBySenderDTO(
+            notificationsDTO.add(new NotificationGroupedBySenderDto(
                     notificationGroupedBySender.getSenderFullName(),
                     notificationGroupedBySender.getNotifications(),
                     notificationGroupedBySender.getNumberOfUnread()));
+
+
+            ContentValues values = new ContentValues();
+            values.put(SendersContract.SendersEntry._ID, notificationGroupedBySender.getSenderId());
+            values.put(SendersContract.SendersEntry.COLUMN_SENDER_FULL_NAME, notificationGroupedBySender.getSenderFullName());
+            handler.startInsert(1,null, SendersContract.SendersEntry.SENDERS_URI, values);
+            for(NotificationResponse notification : notificationGroupedBySender.getNotifications()){
+                ContentValues values2 = new ContentValues();
+                values2.put(NotificationsContract.NotificationsEntry._ID,notification.getId());
+                values2.put(NotificationsContract.NotificationsEntry.COLUMN_CONTENT,notification.getContent());
+                values2.put(NotificationsContract.NotificationsEntry.COLUMN_DATE_OF_SEND,notification.getDateOfSend());
+                values2.put(NotificationsContract.NotificationsEntry.COLUMN_PRIORITY,notification.getPriority());
+                values2.put(NotificationsContract.NotificationsEntry.COLUMN_WAS_READ,notification.getWasRead());
+                values2.put(NotificationsContract.NotificationsEntry.COLUMN_SENDER_ID_COLUMN,notificationGroupedBySender.getSenderId());
+                handler.startInsert(1,null, NotificationsContract.NotificationsEntry.NOTIFICATIONS_URI, values2);
+            }
 
         }
         return notificationsDTO;

@@ -13,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
+import com.pollub.ikms.ikms_mobile.service.FetchMessagesIntentService;
 import com.pollub.ikms.ikms_mobile.service.LoginService;
+import com.pollub.ikms.ikms_mobile.service.FetchNotificationsIntentService;
 import com.pollub.ikms.ikms_mobile.service.NotificationService;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
@@ -30,7 +32,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
     private ProgressDialog progressDialog;
 
-    private int allUnreadedNotifications;
+    private int allUnreadNotifications;
 
     private TextView tvUnreadNotificationsQuantity;
 
@@ -48,15 +50,25 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
                /* Starting Login Service */
             receiver = new RequestResultReceiver(new Handler());
             receiver.setReceiver(MainMenuActivity.this);
-            Intent intent = new Intent(Intent.ACTION_SYNC, null,
-                    MainMenuActivity.this, NotificationService.class);
+            Intent fetchNotificationsIntent = new Intent(Intent.ACTION_SYNC, null,
+                    MainMenuActivity.this, FetchNotificationsIntentService.class);
 
                 /* Send optional extras to Login IntentService */
-            intent.putExtra("url", UrlManager.getInstance().MY_NOTIFICATIONS_URL);
-            intent.putExtra("receiver", receiver);
-            intent.putExtra("requestId", 101);
+            fetchNotificationsIntent.putExtra("url", UrlManager.getInstance().MY_NOTIFICATIONS_URL);
+            fetchNotificationsIntent.putExtra("receiver", receiver);
+            fetchNotificationsIntent.putExtra("requestId", 102);
 
-            startService(intent);
+            startService(fetchNotificationsIntent);
+
+            Intent fetchMessagesIntent = new Intent(Intent.ACTION_SYNC, null,
+                    MainMenuActivity.this, FetchMessagesIntentService.class);
+
+                /* Send optional extras to Login IntentService */
+            fetchMessagesIntent.putExtra("url", UrlManager.getInstance().MY_NOTIFICATIONS_URL);
+            fetchMessagesIntent.putExtra("receiver", receiver);
+            fetchMessagesIntent.putExtra("requestId", 102);
+
+            startService(fetchNotificationsIntent);
 
             goToNotifications = (LinearLayout) findViewById(R.id.go_to_notifications);
             goToNotifications.setOnClickListener(new View.OnClickListener() {
@@ -108,20 +120,22 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
         switch (resultCode) {
             case LoginService.STATUS_RUNNING:
                 progressDialog = new ProgressDialog(MainMenuActivity.this);
-                progressDialog.setMessage("Proszę czekać..");
-                progressDialog.setTitle("Logowanie");
+               // progressDialog.setTitle("ładowanie");
+                progressDialog.setMessage("Ładowanie...");
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(true);
                 progressDialog.show();
                 break;
 
             case LoginService.STATUS_FINISHED:
-                allUnreadedNotifications = resultData.getInt("unreadNotifications", 0);
-                if(allUnreadedNotifications>0){
-                    tvUnreadNotificationsQuantity.setText(allUnreadedNotifications+1+"");
+                allUnreadNotifications = resultData.getInt("unreadNotifications", 0);
+                if(allUnreadNotifications >0){
+                    tvUnreadNotificationsQuantity.setText(Integer.toString(allUnreadNotifications));
+                    tvUnreadNotificationsQuantity.setVisibility(View.VISIBLE);
+                    progressDialog.dismiss();
                 }
                 else
-                    tvUnreadNotificationsQuantity.setText("0");
+                    tvUnreadNotificationsQuantity.setVisibility(View.GONE);
                 break;
 
             case LoginService.STATUS_ERROR:

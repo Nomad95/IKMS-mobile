@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "916023636837",
+    "firebase_url": "https://ikms-mobile.firebaseio.com",
+    "project_id": "ikms-mobile",
+    "storage_bucket": "ikms-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916023636837:android:d44027ba2bd80e25",
+        "android_client_info": {
+          "package_name": "com.pollub.ikms.ikms_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916023636837-d8a2dd66phgo4dkdocceokeh0jh1pd9b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pollub.ikms.ikms_mobile",
+            "certificate_hash": "e1d163c47bcd5ffc830fe6ea0c571de08f6d106a"
+          }
+        },
+        {
+          "client_id": "916023636837-rn00k3v54n0poo5rntppe9b96b1nv2st.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA93JVs8VTcRKE5rFY2HGGyJ3J-g4_DidU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916023636837-rn00k3v54n0poo5rntppe9b96b1nv2st.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

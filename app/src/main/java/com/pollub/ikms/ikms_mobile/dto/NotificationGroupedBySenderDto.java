@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class NotificationGroupedBySenderDTO{
+public class NotificationGroupedBySenderDto {
     
     private final String senderFullName;
     
@@ -16,7 +16,7 @@ public class NotificationGroupedBySenderDTO{
     
     private final int numberOfUnread;
 
-    public NotificationGroupedBySenderDTO(String senderFullName, List<NotificationResponse> notifications, int numberOfUnread) {
+    public NotificationGroupedBySenderDto(String senderFullName, List<NotificationResponse> notifications, int numberOfUnread) {
         this.senderFullName = senderFullName;
         this.notifications = notifications;
         this.numberOfUnread = numberOfUnread;

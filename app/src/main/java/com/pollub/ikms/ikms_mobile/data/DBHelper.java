@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
         //tworzenie bazy
         db.execSQL(TABLE_SENDERS_CREATE);
         db.execSQL(TABLE_NOTIFICATIONS_CREATE);
-        db.execSQL(TABLE_MESSAGES_CREATE);
+//        db.execSQL(TABLE_MESSAGES_CREATE);
     }
 
     @Override

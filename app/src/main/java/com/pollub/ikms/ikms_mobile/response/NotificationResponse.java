@@ -6,12 +6,6 @@ package com.pollub.ikms.ikms_mobile.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import java.text.DateFormat;
-import java.util.Date;
-
 import lombok.Data;
 
 @Data

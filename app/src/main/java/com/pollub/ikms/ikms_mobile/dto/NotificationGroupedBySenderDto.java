@@ -4,7 +4,6 @@ import com.pollub.ikms.ikms_mobile.response.NotificationResponse;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

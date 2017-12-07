@@ -16,7 +16,6 @@ import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
 import com.pollub.ikms.ikms_mobile.service.FetchMessagesIntentService;
 import com.pollub.ikms.ikms_mobile.service.LoginService;
 import com.pollub.ikms.ikms_mobile.service.FetchNotificationsIntentService;
-import com.pollub.ikms.ikms_mobile.service.NotificationService;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
 public class MainMenuActivity extends AppCompatActivity  implements RequestResultReceiver.Receiver{
@@ -63,12 +62,12 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
             Intent fetchMessagesIntent = new Intent(Intent.ACTION_SYNC, null,
                     MainMenuActivity.this, FetchMessagesIntentService.class);
 
-                /* Send optional extras to Login IntentService */
+           /*     *//* Send optional extras to Login IntentService *//*
             fetchMessagesIntent.putExtra("url", UrlManager.getInstance().MY_NOTIFICATIONS_URL);
             fetchMessagesIntent.putExtra("receiver", receiver);
             fetchMessagesIntent.putExtra("requestId", 102);
 
-            startService(fetchNotificationsIntent);
+            startService(fetchNotificationsIntent);*/
 
             goToNotifications = (LinearLayout) findViewById(R.id.go_to_notifications);
             goToNotifications.setOnClickListener(new View.OnClickListener() {

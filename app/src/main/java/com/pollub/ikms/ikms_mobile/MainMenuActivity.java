@@ -23,6 +23,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
     private String token;
 
     private LinearLayout goToNotifications;
+    private LinearLayout goToPhoneNumbers;
 
     private SharedPreferences prefs;
     private final String tokenKey = "com.pollub.ikms.ikms_mobile.token";
@@ -70,12 +71,10 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
             startService(fetchNotificationsIntent);*/
 
             goToNotifications = (LinearLayout) findViewById(R.id.go_to_notifications);
-            goToNotifications.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    redirectToNotifications();
-                }
-            });
+            goToNotifications.setOnClickListener(view -> redirectToNotifications());
+
+            goToPhoneNumbers = (LinearLayout) findViewById(R.id.go_to_call);
+            goToPhoneNumbers.setOnClickListener(view -> redirectToPhoneNumbers());
         }
         else{
             redirectToLoginActivity();
@@ -106,6 +105,11 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
     public void redirectToNotifications() {
         Intent intent = new Intent(this, MyNotificationsListActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void redirectToPhoneNumbers() {
+        Intent intent = new Intent(this, PhoneCallActivity.class);
         startActivityForResult(intent, 1);
     }
 

@@ -3,6 +3,7 @@
     package="com.pollub.ikms.ikms_mobile">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,36 +13,39 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         debuggable=true
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".MyNotificationsListActivity" />
         <activity android:name=".AddNotificationActivity" />
-        <activity android:name=".NotificationDetailsActivity"/>
+        <activity android:name=".NotificationDetailsActivity" />
 
         <service
             android:name=".service.LoginService"
-            android:exported="false"/>
+            android:exported="false" />
         <service
             android:name=".service.FetchNotificationsIntentService"
             android:exported="false" />
 
-        <receiver android:name=".receiver.NetworkChangeReceiver" >
+        <receiver android:name=".receiver.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
             </intent-filter>
         </receiver>
 
         <provider
             android:name=".NotificationsProvider"
             android:authorities="com.pollub.ikms.ikms_mobile.notificationsprovider"
-            android:exported="false"/>
+            android:exported="false" />
+
+        <activity android:name=".PhoneCallActivity"></activity>
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@
     package="com.pollub.ikms.ikms_mobile">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -42,6 +43,9 @@
         <provider
             android:name=".NotificationsProvider"
             android:authorities="com.pollub.ikms.ikms_mobile.notificationsprovider"
+            android:exported="false" />
+
+        <activity android:name=".PhoneCallActivity"></activity>
             android:exported="false" />
 
         <activity android:name=".messagebox.MyMessagesListActivity" />

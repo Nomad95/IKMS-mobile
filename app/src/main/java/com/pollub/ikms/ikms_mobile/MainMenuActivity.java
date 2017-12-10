@@ -24,7 +24,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
     private String token;
 
     private LinearLayout goToNotifications;
-
+    private LinearLayout goToPhoneNumbers;
     private LinearLayout goToMessages;
 
     private SharedPreferences prefs;
@@ -73,20 +73,13 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
             startService(fetchNotificationsIntent);*/
 
             goToNotifications = (LinearLayout) findViewById(R.id.go_to_notifications);
-            goToNotifications.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    redirectToNotifications();
-                }
-            });
+            goToNotifications.setOnClickListener(view -> redirectToNotifications());
+
+            goToPhoneNumbers = (LinearLayout) findViewById(R.id.go_to_call);
+            goToPhoneNumbers.setOnClickListener(view -> redirectToPhoneNumbers());
 
             goToMessages = (LinearLayout) findViewById(R.id.go_to_messages);
-            goToMessages.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    redirectToMessages();
-                }
-            });
+            goToMessages.setOnClickListener(view -> redirectToMessages());
         }
         else{
             redirectToLoginActivity();
@@ -117,6 +110,11 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
     public void redirectToNotifications() {
         Intent intent = new Intent(this, MyNotificationsListActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void redirectToPhoneNumbers() {
+        Intent intent = new Intent(this, PhoneCallActivity.class);
         startActivityForResult(intent, 1);
     }
 

@@ -78,9 +78,14 @@ public class OutboxListFragment extends Fragment {
                 Intent messageDetailsIntent = new Intent(getActivity(), OutboxDetailsActivity.class);
 
                 messageDetailsIntent.putExtra("messageId", selectedMessage.getId());
+                messageDetailsIntent.putExtra("messageTitle", selectedMessage.getTitle());
+                messageDetailsIntent.putExtra("messageRecipient", selectedMessage.getRecipientFullName());
+                messageDetailsIntent.putExtra("messageDateOfSend", selectedMessage.getDateOfSend());
+                messageDetailsIntent.putExtra("messageContents", selectedMessage.getMessageContents());
                 startActivityForResult(messageDetailsIntent,1 );
             }
         });
+
 
         return rootView;
     }

@@ -5,26 +5,41 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.pollub.ikms.ikms_mobile.R;
+import com.pollub.ikms.ikms_mobile.model.MessageItemModel;
 
 public class OutboxDetailsActivity extends AppCompatActivity {
 
-    TextView tvIdMessage;
+    TextView to, dateOfSend, title, content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inbox_details);
+        setContentView(R.layout.activity_outbox_details);
 
-        //tvIdMessage = (TextView) findViewById(R.id.messageId);
+        to = (TextView) findViewById(R.id.outbox_details_to);
+        dateOfSend = (TextView) findViewById(R.id.outbox_details_date);
+        title = (TextView) findViewById(R.id.outbox_details_title);
+        content = (TextView) findViewById(R.id.outbox_details_content);
+
+        MessageItemModel message = getMessageDetailsFromExtras();
+
+        to.setText(message.getRecipientFullName());
+        dateOfSend.setText(message.getDateOfSend());
+        title.setText(message.getTitle());
+        content.setText(message.getMessageContents());
+    }
+
+    private MessageItemModel getMessageDetailsFromExtras() {
 
         Bundle extras = getIntent().getExtras();
-        Long messageId;
 
-        if (extras != null) {
-            messageId = extras.getLong("messageId");
-            tvIdMessage.setText(String.valueOf(messageId));
-        }
+        MessageItemModel messageItemModel1 = new MessageItemModel();
+        messageItemModel1.setId(extras.getLong("messageId"));
+        messageItemModel1.setMessageContents(extras.getString("messageContents"));
+        messageItemModel1.setTitle(extras.getString("messageTitle"));
+        messageItemModel1.setRecipientFullName(extras.getString("messageRecipient"));
+        messageItemModel1.setDateOfSend(extras.getString("messageDateOfSend"));
 
-
+        return messageItemModel1;
     }
 }

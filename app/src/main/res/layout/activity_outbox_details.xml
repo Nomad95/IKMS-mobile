@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         card_view:cardCornerRadius="24dp"
         android:layout_weight="0.4">
-        
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,7 +27,7 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:id="@+id/inbox_details_from_label"
+                    android:id="@+id/outbox_details_to_label"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -37,8 +37,8 @@
                     android:text="Od:"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
                 <TextView
-                    android:id="@+id/inbox_details_from"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/outbox_details_to"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
@@ -55,16 +55,16 @@
                 android:layout_below="@id/layoutTop">
 
                 <TextView
-                    android:id="@+id/inbox_details_date_label"
-                    android:layout_width="100dp"
-                    android:layout_height="72dp"
+                    android:id="@+id/outbox_details_date_label"
+                    android:layout_width="90dp"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
                     android:layout_weight="0.26"
-                    android:text=" Odebrano:"
+                    android:text=" Wysłano:"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
                 <TextView
-                    android:id="@+id/inbox_details_date"
+                    android:id="@+id/outbox_details_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -81,7 +81,7 @@
                 android:layout_below="@id/layoutWithDate">
 
                 <TextView
-                    android:id="@+id/inbox_details_title_label"
+                    android:id="@+id/outbox_details_title_label"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -91,7 +91,7 @@
                     android:text="Temat:"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
                 <TextView
-                    android:id="@+id/inbox_details_title"
+                    android:id="@+id/outbox_details_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -113,7 +113,7 @@
         android:layout_weight="0.5">
 
         <TextView
-            android:id="@+id/inbox_details_content"
+            android:id="@+id/outbox_details_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -122,17 +122,4 @@
             android:text="dasdasdasdasd"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </android.support.v7.widget.CardView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="0.1"
-        android:layout_marginTop="15dp">
-        <Button
-            android:id="@+id/replay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Odpowiedz" />
-    </LinearLayout>
 </LinearLayout>

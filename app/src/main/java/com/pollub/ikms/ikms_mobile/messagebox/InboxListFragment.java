@@ -79,6 +79,11 @@ public class InboxListFragment extends Fragment {
                 Intent messageDetailsIntent = new Intent(getActivity(), InboxDetailsActivity.class);
 
                 messageDetailsIntent.putExtra("messageId", selectedMessage.getId());
+                messageDetailsIntent.putExtra("messageTitle", selectedMessage.getTitle());
+                messageDetailsIntent.putExtra("messageSender", selectedMessage.getSenderFullName());
+                messageDetailsIntent.putExtra("messageDateOfSend", selectedMessage.getDateOfSend());
+                messageDetailsIntent.putExtra("messageContents", selectedMessage.getMessageContents());
+                messageDetailsIntent.putExtra("messageSenderUsername", selectedMessage.getSenderUsername());
                 startActivityForResult(messageDetailsIntent,1 );
             }
         });

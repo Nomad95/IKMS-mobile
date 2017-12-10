@@ -10,6 +10,7 @@ import com.pollub.ikms.ikms_mobile.model.MessageItemModel;
 public class InboxDetailsActivity extends AppCompatActivity {
 
     TextView from, dateOfSend, title, content;
+    MessageItemModel message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,30 +22,25 @@ public class InboxDetailsActivity extends AppCompatActivity {
         title = (TextView) findViewById(R.id.inbox_details_title);
         content = (TextView) findViewById(R.id.inbox_details_content);
 
-        Bundle extras = getIntent().getExtras();
-        Long messageId;
+        message = getMessageDetailsFromExtras();
 
-        if (extras != null) {
-            messageId = extras.getLong("messageId");
-            MessageItemModel message = findMessageById(messageId);
-
-            from.setText(message.getRecipientFullName());
-            dateOfSend.setText(message.getDateOfSend());
-            title.setText(message.getTitle());
-            content.setText(message.getMessageContents());
-        } else {
-            // TODO [Arek] wyrzucić użytkownikowi błąd i wywalić go do listy
-        }
+        from.setText(message.getSenderFullName());
+        dateOfSend.setText(message.getDateOfSend());
+        title.setText(message.getTitle());
+        content.setText(message.getMessageContents());
     }
 
-    private MessageItemModel findMessageById(Long messageId){
+    private MessageItemModel getMessageDetailsFromExtras() {
+
+        Bundle extras = getIntent().getExtras();
+
         MessageItemModel messageItemModel1 = new MessageItemModel();
-        messageItemModel1.setId(1L);
-        messageItemModel1.setMessageContents("Treść Treść Treść Treść Treść ");
-        messageItemModel1.setTitle("Pierwsza wiadomość wysłana");
-        messageItemModel1.setRecipientFullName("Adrian Sarnecki");
-        messageItemModel1.setWasRead(true);
-        messageItemModel1.setDateOfSend("3:45");
+        messageItemModel1.setId(extras.getLong("messageId"));
+        messageItemModel1.setMessageContents(extras.getString("messageContents"));
+        messageItemModel1.setTitle(extras.getString("messageTitle"));
+        messageItemModel1.setSenderFullName(extras.getString("messageSender"));
+        messageItemModel1.setDateOfSend(extras.getString("messageDateOfSend"));
+        messageItemModel1.setSenderUsername(extras.getString("senderUsername"));
 
         return messageItemModel1;
     }

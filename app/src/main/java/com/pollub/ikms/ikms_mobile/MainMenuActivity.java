@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pollub.ikms.ikms_mobile.messagebox.MyMessagesListActivity;
 import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
 import com.pollub.ikms.ikms_mobile.service.FetchMessagesIntentService;
 import com.pollub.ikms.ikms_mobile.service.LoginService;
@@ -23,6 +24,8 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
     private String token;
 
     private LinearLayout goToNotifications;
+
+    private LinearLayout goToMessages;
 
     private SharedPreferences prefs;
     private final String tokenKey = "com.pollub.ikms.ikms_mobile.token";
@@ -76,6 +79,14 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
                     redirectToNotifications();
                 }
             });
+
+            goToMessages = (LinearLayout) findViewById(R.id.go_to_messages);
+            goToMessages.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    redirectToMessages();
+                }
+            });
         }
         else{
             redirectToLoginActivity();
@@ -111,6 +122,11 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
     private void redirectToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    public void redirectToMessages() {
+        Intent intent = new Intent(this, MyMessagesListActivity.class);
         startActivityForResult(intent, 1);
     }
 

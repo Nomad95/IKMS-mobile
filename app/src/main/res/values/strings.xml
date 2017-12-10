@@ -3,4 +3,7 @@
     <string name="notifications">Powiadomienia</string>
     <string name="messages">Wiadomości</string>
     <string name="call">Zadzwoń</string>
+    <string name="refresh">Odśwież</string>
+    <string name="inbox">Odebrane</string>
+    <string name="outbox">Wysłane</string>
 </resources>

@@ -9,7 +9,7 @@ import com.pollub.ikms.ikms_mobile.model.MessageItemModel;
 
 public class OutboxDetailsActivity extends AppCompatActivity {
 
-    TextView to, dateOfSend, title, content;
+    private TextView to, dateOfSend, title, content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

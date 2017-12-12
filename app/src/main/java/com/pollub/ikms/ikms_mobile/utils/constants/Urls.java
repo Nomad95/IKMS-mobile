@@ -28,4 +28,7 @@ public final class Urls {
 
         public static final String SENT_NEWEST_MESSAGES_HEROKU = HEROKU_DOMAIN + "api/message/myMessages/sent/mobile/newest/";
         public static final String SENT_NEWEST_MESSAGES_NGROK = NGROK_DOMAIN + "api/message/myMessages/sent/mobile/newest/";
+
+        public static final String SENDING_NEW_MESSAGE_HEROKU = HEROKU_DOMAIN + "/api/message/user/%s";
+        public static final String SENDING_NEW_MESSAGE_NGROK = NGROK_DOMAIN + "/api/message/user/%s";
 }

@@ -1,16 +1,21 @@
 package com.pollub.ikms.ikms_mobile.messagebox;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.pollub.ikms.ikms_mobile.R;
 import com.pollub.ikms.ikms_mobile.model.MessageItemModel;
+import com.pollub.ikms.ikms_mobile.request.NewMessageRequest;
 
 public class InboxDetailsActivity extends AppCompatActivity {
 
-    TextView from, dateOfSend, title, content;
-    MessageItemModel message;
+    private TextView from, dateOfSend, title, content;
+    private MessageItemModel message;
+    private Button replayButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,16 @@ public class InboxDetailsActivity extends AppCompatActivity {
         dateOfSend.setText(message.getDateOfSend());
         title.setText(message.getTitle());
         content.setText(message.getMessageContents());
+
+        replayButton = (Button) findViewById(R.id.replay);
+        replayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InboxDetailsActivity.this, SendingMessageActivity.class);
+                intent.putExtra("username", message.getSenderUsername());
+                startActivityForResult(intent, 1);
+            }
+        });
     }
 
     private MessageItemModel getMessageDetailsFromExtras() {
@@ -40,7 +55,7 @@ public class InboxDetailsActivity extends AppCompatActivity {
         messageItemModel1.setTitle(extras.getString("messageTitle"));
         messageItemModel1.setSenderFullName(extras.getString("messageSender"));
         messageItemModel1.setDateOfSend(extras.getString("messageDateOfSend"));
-        messageItemModel1.setSenderUsername(extras.getString("senderUsername"));
+        messageItemModel1.setSenderUsername(extras.getString("messageSenderUsername"));
 
         return messageItemModel1;
     }

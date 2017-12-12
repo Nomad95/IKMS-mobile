@@ -36,6 +36,9 @@
         <service
             android:name=".service.FetchMessagesIntentService"
             android:exported="false" />
+        <service
+            android:name=".service.SendingMessageService"
+            android:exported="false" />
 
         <receiver android:name=".receiver.NetworkChangeReceiver">
             <intent-filter>
@@ -52,12 +55,12 @@
             android:authorities="com.pollub.ikms.ikms_mobile.messagesprovider"
             android:exported="false" />
 
-        <activity android:name=".PhoneCallActivity"></activity>
-            android:exported="false" />
-
+        <activity android:name=".PhoneCallActivity" />
+        android:exported="false" />
         <activity android:name=".messagebox.MyMessagesListActivity" />
-        <activity android:name=".messagebox.InboxDetailsActivity"/>
-        <activity android:name=".messagebox.OutboxDetailsActivity"/>
+        <activity android:name=".messagebox.InboxDetailsActivity" />
+        <activity android:name=".messagebox.OutboxDetailsActivity" />
+        <activity android:name=".messagebox.SendingMessageActivity"></activity>
     </application>
 
 </manifest>

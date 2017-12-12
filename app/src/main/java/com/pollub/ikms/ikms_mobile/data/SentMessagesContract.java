@@ -7,18 +7,18 @@ import android.provider.BaseColumns;
  * Created by ATyKondziu on 29.11.2017.
  */
 
-public class MessagesContract {
+public class SentMessagesContract {
     //constants for Uri
     public static final String CONTENT_AUTHORITY = "com.pollub.ikms.ikms_mobile.messagesprovider";
-    public static final String PATH_MESSAGES = "messages";
+    public static final String PATH_SENT_MESSAGES = "sent_messages";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
-    public static final class MessagesEntry implements BaseColumns {
+    public static final class SentMessagesEntry implements BaseColumns {
 
-        public static final Uri MESSAGES_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_MESSAGES);
+        public static final Uri SENT_MESSAGES_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_SENT_MESSAGES);
 
         // Table name
-        public final static String TABLE_NAME = "messages";
+        public final static String TABLE_NAME = "sent_messages";
 
         //column (field) names
         public static final String _ID = BaseColumns._ID;

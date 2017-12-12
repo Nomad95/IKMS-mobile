@@ -50,6 +50,9 @@ public class FetchNotificationsIntentService extends IntentService {
 
     private ResponseEntity<NotificationGroupedBySender[]> response;
 
+    private static final NotificationGroupedBySender[] NO_NOTIFICATIONS = {};
+
+
     private NotificationsQueryHandler handler;
 
     public FetchNotificationsIntentService() {
@@ -97,7 +100,7 @@ public class FetchNotificationsIntentService extends IntentService {
 
 
     private NotificationGroupedBySender[] getNotifications() {
-        final String url = UrlManager.getInstance().MY_NOTIFICATIONS_URL;
+        final String url = UrlManager.MY_NOTIFICATIONS_URL;
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         HttpHeaders headers = new HttpHeaders();
@@ -110,9 +113,9 @@ public class FetchNotificationsIntentService extends IntentService {
         if (response.getStatusCode().value() == 200) {
             return response.getBody();
         } else if (response.getStatusCode().value() == 401) {
-            return null;
+            return NO_NOTIFICATIONS;
         }
-        else return null;
+        else return NO_NOTIFICATIONS;
     }
 
 

@@ -33,6 +33,9 @@
         <service
             android:name=".service.FetchNotificationsIntentService"
             android:exported="false" />
+        <service
+            android:name=".service.FetchMessagesIntentService"
+            android:exported="false" />
 
         <receiver android:name=".receiver.NetworkChangeReceiver">
             <intent-filter>
@@ -41,8 +44,12 @@
         </receiver>
 
         <provider
-            android:name=".NotificationsProvider"
+            android:name=".data.NotificationsProvider"
             android:authorities="com.pollub.ikms.ikms_mobile.notificationsprovider"
+            android:exported="false" />
+        <provider
+            android:name=".data.MessagesProvider"
+            android:authorities="com.pollub.ikms.ikms_mobile.messagesprovider"
             android:exported="false" />
 
         <activity android:name=".PhoneCallActivity"></activity>

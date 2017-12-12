@@ -12,18 +12,10 @@ public final class UrlManager {
     public static String MY_NOTIFICATIONS_URL;
     public static String READ_NOTIFICATION_URL;
     public static String PHONE_NUMBERS_URL;
+    public static String RECEIVED_NEWEST_MESSAGES_URL;
+    public static String SENT_NEWEST_MESSAGES_URL;
 
-    private static final UrlManager instance = new UrlManager();
-
-    private UrlManager() {
-        setUrls();
-    }
-
-    public static UrlManager getInstance(){
-        return instance;
-    }
-
-    private static void setUrls() {
+    static {
         switch (SERVER) {
             case HEROKU:
                 AUTH_LOGIN_URL = Urls.AUTH_LOGIN_HEROKU;
@@ -31,6 +23,8 @@ public final class UrlManager {
                 MY_NOTIFICATIONS_URL = Urls.MY_NOTIFICATIONS_HEROKU;
                 READ_NOTIFICATION_URL = Urls.READ_NOTIFICATION_HEROKU;
                 PHONE_NUMBERS_URL = Urls.PHONE_NUMBERS_HEROKU;
+                RECEIVED_NEWEST_MESSAGES_URL = Urls.RECEIVED_NEWEST_MESSAGES_HEROKU;
+                SENT_NEWEST_MESSAGES_URL = Urls.SENT_NEWEST_MESSAGES_HEROKU;
                 break;
             case NGROK:
                 AUTH_LOGIN_URL = Urls.AUTH_LOGIN_NGROK;
@@ -38,6 +32,8 @@ public final class UrlManager {
                 MY_NOTIFICATIONS_URL = Urls.MY_NOTIFICATIONS_NGROK;
                 READ_NOTIFICATION_URL = Urls.READ_NOTIFICATION_NGROK;
                 PHONE_NUMBERS_URL = Urls.PHONE_NUMBERS_NGROK;
+                RECEIVED_NEWEST_MESSAGES_URL = Urls.RECEIVED_NEWEST_MESSAGES_NGROK;
+                SENT_NEWEST_MESSAGES_URL = Urls.SENT_NEWEST_MESSAGES_NGROK;
                 break;
             default:
                 AUTH_LOGIN_URL = Urls.AUTH_LOGIN_HEROKU;

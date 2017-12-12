@@ -72,7 +72,7 @@ public class LoginService extends IntentService {
 
     @SneakyThrows
     private TokenResponse getAuthorizationToken(ResultReceiver receiver) {
-        final String url = UrlManager.getInstance().AUTH_LOGIN_URL;
+        final String url = UrlManager.AUTH_LOGIN_URL;
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         LoginRequest loginRequest = new LoginRequest();

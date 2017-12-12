@@ -29,9 +29,9 @@ import org.springframework.web.client.RestTemplate;
  */
 
 public class FetchMessagesIntentService extends IntentService {
-    public static final int STATUS_RUNNING = 0;
-    public static final int STATUS_FINISHED = 1;
-    public static final int STATUS_ERROR = 2;
+    public static final int STATUS_RUNNING = 3;
+    public static final int STATUS_FINISHED = 4;
+    public static final int STATUS_ERROR = 5;
 
     private static final String TAG = "MessagesService";
 
@@ -40,7 +40,11 @@ public class FetchMessagesIntentService extends IntentService {
     private SharedPreferences prefs;
     private String tokenKey = "com.pollub.ikms.ikms_mobile.token";
 
-    private MessageResponse[] allMessagesDTO;
+    private MessageResponse[] receivedMessages;
+
+    private MessageResponse[] sentMessages;
+
+    private static final MessageResponse[] NO_MESSAGES = {};
 
     private ResponseEntity<MessageResponse[]> response;
 
@@ -63,9 +67,10 @@ public class FetchMessagesIntentService extends IntentService {
         Bundle messagesBundle = new Bundle();
         receiver.send(STATUS_RUNNING, messagesBundle);
         try {
-            allMessagesDTO = getMessages();
-            if (allMessagesDTO != null) {
-                messagesBundle.putInt("unreadMessages", countAllUnreadMessage());
+            receivedMessages = getReceivedMessages();
+            sentMessages = getSentMessages();
+            if (receivedMessages.length > 0 && sentMessages.length > 0) {
+                messagesBundle.putInt("unreadMessages", countAllUnreadMessages());
                 receiver.send(STATUS_FINISHED, messagesBundle);
             } else {
                 receiver.send(STATUS_FINISHED, messagesBundle);
@@ -79,17 +84,19 @@ public class FetchMessagesIntentService extends IntentService {
         // this.stopSelf();
     }
 
-    private int countAllUnreadMessage() {
+    private int countAllUnreadMessages() {
         int counter = 0;
-        for (MessageResponse messageResponse : allMessagesDTO) {
-            counter += messageResponse.getNumberOfUnread();
+        for (MessageResponse receivedMessage : receivedMessages) {
+            if (receivedMessage.getWasRead()) {
+                 counter ++;
+            }
         }
         return counter;
     }
 
 
-    private MessageResponse[] getMessages() {
-        final String url = UrlManager.getInstance().MY_NOTIFICATIONS_URL;
+    private MessageResponse[] getReceivedMessages() {
+        final String url = UrlManager.RECEIVED_NEWEST_MESSAGES_URL+"0";
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         HttpHeaders headers = new HttpHeaders();
@@ -102,8 +109,26 @@ public class FetchMessagesIntentService extends IntentService {
         if (response.getStatusCode().value() == 200) {
             return response.getBody();
         } else if (response.getStatusCode().value() == 401) {
-            return null;
-        } else return null;
+            return NO_MESSAGES;
+        } else return NO_MESSAGES;
+    }
+
+    private MessageResponse[] getSentMessages() {
+        final String url = UrlManager.SENT_NEWEST_MESSAGES_URL+"0";
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Auth-Token", token);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        response = restTemplate.exchange(url, HttpMethod.GET, entity, MessageResponse[].class);
+
+        if (response.getStatusCode().value() == 200) {
+            return response.getBody();
+        } else if (response.getStatusCode().value() == 401) {
+            return NO_MESSAGES;
+        } else return NO_MESSAGES;
     }
 
 

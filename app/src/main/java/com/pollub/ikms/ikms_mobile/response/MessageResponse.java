@@ -25,8 +25,8 @@ public class MessageResponse {
     @JsonProperty("dateOfSend")
     private String dateOfSend;
 
-    @JsonProperty("messageContents")
-    private String messageContents;
+    @JsonProperty("messageContent")
+    private String messageContent;
 
     @JsonProperty("wasRead")
     private Boolean wasRead;
@@ -42,7 +42,4 @@ public class MessageResponse {
 
     @JsonProperty("senderFullName")
     private String senderFullName;
-
-    @JsonProperty("numberOfUnread")
-    private int numberOfUnread;
 }

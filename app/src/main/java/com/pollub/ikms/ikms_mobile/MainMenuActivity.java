@@ -15,11 +15,10 @@ import android.widget.Toast;
 import com.pollub.ikms.ikms_mobile.messagebox.MyMessagesListActivity;
 import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
 import com.pollub.ikms.ikms_mobile.service.FetchMessagesIntentService;
-import com.pollub.ikms.ikms_mobile.service.LoginService;
 import com.pollub.ikms.ikms_mobile.service.FetchNotificationsIntentService;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
-public class MainMenuActivity extends AppCompatActivity  implements RequestResultReceiver.Receiver{
+public class MainMenuActivity extends AppCompatActivity implements RequestResultReceiver.Receiver {
 
     private String token;
 
@@ -29,14 +28,23 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
     private SharedPreferences prefs;
     private final String tokenKey = "com.pollub.ikms.ikms_mobile.token";
+    private String unreadMessagesKey = "com.pollub.ikms.ikms_mobile.unread_messages";
+    private String unreadNotificationsKey = "com.pollub.ikms.ikms_mobile.unread_notifications";
 
-    private RequestResultReceiver receiver;
+    private RequestResultReceiver notificationsReceiver;
+
+    private RequestResultReceiver messagesReceiver;
+
 
     private ProgressDialog progressDialog;
 
     private int allUnreadNotifications;
 
+    private int allUnreadMessages;
+
     private TextView tvUnreadNotificationsQuantity;
+
+    private TextView tvUnreadMessagesQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,33 +52,33 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
         setContentView(R.layout.activity_main_menu);
 
         tvUnreadNotificationsQuantity = (TextView) findViewById(R.id.unread_notifications_counter);
+        tvUnreadMessagesQuantity = (TextView) findViewById(R.id.unread_messages_counter);
+
+
+
         prefs = this.getSharedPreferences(
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);
         token = prefs.getString(tokenKey, "");
-        if (token.length() > 10) {
+        tvUnreadNotificationsQuantity.setText(prefs.getString(unreadNotificationsKey, ""));
+        tvUnreadMessagesQuantity.setText(prefs.getString(unreadMessagesKey, ""));
 
-               /* Starting Login Service */
-            receiver = new RequestResultReceiver(new Handler());
-            receiver.setReceiver(MainMenuActivity.this);
+        if (token.length() > 10) {
+            notificationsReceiver = new RequestResultReceiver(new Handler());
+            notificationsReceiver.setReceiver(MainMenuActivity.this);
             Intent fetchNotificationsIntent = new Intent(Intent.ACTION_SYNC, null,
                     MainMenuActivity.this, FetchNotificationsIntentService.class);
 
-                /* Send optional extras to Login IntentService */
-            fetchNotificationsIntent.putExtra("url", UrlManager.getInstance().MY_NOTIFICATIONS_URL);
-            fetchNotificationsIntent.putExtra("receiver", receiver);
-            fetchNotificationsIntent.putExtra("requestId", 102);
+            fetchNotificationsIntent.putExtra("receiver", notificationsReceiver);
 
-            startService(fetchNotificationsIntent);
-
+            messagesReceiver = new RequestResultReceiver(new Handler());
+            messagesReceiver.setReceiver(MainMenuActivity.this);
             Intent fetchMessagesIntent = new Intent(Intent.ACTION_SYNC, null,
                     MainMenuActivity.this, FetchMessagesIntentService.class);
 
-           /*     *//* Send optional extras to Login IntentService *//*
-            fetchMessagesIntent.putExtra("url", UrlManager.getInstance().MY_NOTIFICATIONS_URL);
-            fetchMessagesIntent.putExtra("receiver", receiver);
-            fetchMessagesIntent.putExtra("requestId", 102);
+            fetchMessagesIntent.putExtra("receiver", messagesReceiver);
 
-            startService(fetchNotificationsIntent);*/
+            startService(fetchNotificationsIntent);
+            startService(fetchMessagesIntent);
 
             goToNotifications = (LinearLayout) findViewById(R.id.go_to_notifications);
             goToNotifications.setOnClickListener(view -> redirectToNotifications());
@@ -80,8 +88,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
             goToMessages = (LinearLayout) findViewById(R.id.go_to_messages);
             goToMessages.setOnClickListener(view -> redirectToMessages());
-        }
-        else{
+        } else {
             redirectToLoginActivity();
         }
 
@@ -103,9 +110,52 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        switch (resultCode) {
+            case FetchNotificationsIntentService.STATUS_RUNNING:
+                break;
+
+            case FetchNotificationsIntentService.STATUS_FINISHED:
+                allUnreadNotifications = resultData.getInt("unreadNotifications", 0);
+                prefs.edit().putString(unreadNotificationsKey, Integer.toString(allUnreadNotifications)).apply();
+                if (allUnreadNotifications > 0) {
+                    tvUnreadNotificationsQuantity.setText(prefs.getString(unreadNotificationsKey, ""));
+                    tvUnreadNotificationsQuantity.setVisibility(View.VISIBLE);
+                } else
+                    tvUnreadNotificationsQuantity.setVisibility(View.INVISIBLE);
+                break;
+
+            case FetchNotificationsIntentService.STATUS_ERROR:
+                String statusCode = resultData.getString(Intent.EXTRA_TEXT);
+                tvUnreadNotificationsQuantity.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Połączenie z serwerem nieudane", Toast.LENGTH_SHORT).show();
+                break;
+
+            case FetchMessagesIntentService.STATUS_RUNNING:
+                break;
+
+            case FetchMessagesIntentService.STATUS_FINISHED:
+                allUnreadMessages = resultData.getInt("unreadMessages", 0);
+                prefs.edit().putString(unreadMessagesKey, Integer.toString(allUnreadMessages)).apply();
+                if (allUnreadMessages > 0) {
+                    tvUnreadMessagesQuantity.setText(prefs.getString(unreadMessagesKey, ""));
+                    tvUnreadMessagesQuantity.setVisibility(View.VISIBLE);
+                } else
+                    tvUnreadMessagesQuantity.setVisibility(View.INVISIBLE);
+                break;
+
+            case FetchMessagesIntentService.STATUS_ERROR:
+                String fetchMessagesStatusCode = resultData.getString(Intent.EXTRA_TEXT);
+                tvUnreadMessagesQuantity.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Połączenie z serwerem nieudane", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     public void redirectToNotifications() {
@@ -126,36 +176,5 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
     public void redirectToMessages() {
         Intent intent = new Intent(this, MyMessagesListActivity.class);
         startActivityForResult(intent, 1);
-    }
-
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        switch (resultCode) {
-            case LoginService.STATUS_RUNNING:
-                progressDialog = new ProgressDialog(MainMenuActivity.this);
-               // progressDialog.setTitle("ładowanie");
-                progressDialog.setMessage("Ładowanie...");
-                progressDialog.setIndeterminate(false);
-                progressDialog.setCancelable(true);
-                progressDialog.show();
-                break;
-
-            case LoginService.STATUS_FINISHED:
-                allUnreadNotifications = resultData.getInt("unreadNotifications", 0);
-                if(allUnreadNotifications >0){
-                    tvUnreadNotificationsQuantity.setText(Integer.toString(allUnreadNotifications));
-                    tvUnreadNotificationsQuantity.setVisibility(View.VISIBLE);
-                    progressDialog.dismiss();
-                }
-                else
-                    tvUnreadNotificationsQuantity.setVisibility(View.GONE);
-                break;
-
-            case LoginService.STATUS_ERROR:
-                String statusCode = resultData.getString(Intent.EXTRA_TEXT);
-                progressDialog.dismiss();
-                Toast.makeText(this, "Niepoprawne dane logowania", Toast.LENGTH_SHORT).show();
-                break;
-        }
     }
 }

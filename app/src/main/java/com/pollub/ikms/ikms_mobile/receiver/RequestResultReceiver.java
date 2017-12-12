@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class RequestResultReceiver extends ResultReceiver {
 
-    private Receiver receiver;
+    private Receiver  receiver;
 
     @SuppressLint("RestrictedApi")
     public RequestResultReceiver(Handler handler) {

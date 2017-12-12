@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements RequestResultRec
                     Intent intent = new Intent(Intent.ACTION_SYNC, null, LoginActivity.this, LoginService.class);
 
                 /* Send optional extras to Login IntentService */
-                    intent.putExtra("url", UrlManager.getInstance().AUTH_LOGIN_URL);
+                    intent.putExtra("url", UrlManager.AUTH_LOGIN_URL);
                     intent.putExtra("receiver", receiver);
                     intent.putExtra("requestId", 101);
                     intent.putExtra("username", username);

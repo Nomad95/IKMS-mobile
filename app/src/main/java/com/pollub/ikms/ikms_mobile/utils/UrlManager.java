@@ -12,6 +12,7 @@ public final class UrlManager {
     public static String MY_NOTIFICATIONS_URL;
     public static String READ_NOTIFICATION_URL;
     public static String PHONE_NUMBERS_URL;
+    public static String SENDING_NEW_MESSAGE;
 
     private static final UrlManager instance = new UrlManager();
 
@@ -31,6 +32,7 @@ public final class UrlManager {
                 MY_NOTIFICATIONS_URL = Urls.MY_NOTIFICATIONS_HEROKU;
                 READ_NOTIFICATION_URL = Urls.READ_NOTIFICATION_HEROKU;
                 PHONE_NUMBERS_URL = Urls.PHONE_NUMBERS_HEROKU;
+                SENDING_NEW_MESSAGE = Urls.SENDING_NEW_MESSAGE_HEROKU;
                 break;
             case NGROK:
                 AUTH_LOGIN_URL = Urls.AUTH_LOGIN_NGROK;
@@ -38,12 +40,14 @@ public final class UrlManager {
                 MY_NOTIFICATIONS_URL = Urls.MY_NOTIFICATIONS_NGROK;
                 READ_NOTIFICATION_URL = Urls.READ_NOTIFICATION_NGROK;
                 PHONE_NUMBERS_URL = Urls.PHONE_NUMBERS_NGROK;
+                SENDING_NEW_MESSAGE = Urls.SENDING_NEW_MESSAGE_NGROK;
                 break;
             default:
                 AUTH_LOGIN_URL = Urls.AUTH_LOGIN_HEROKU;
                 EMPLOYEE_URL = Urls.AUTH_LOGIN_HEROKU;
                 MY_NOTIFICATIONS_URL = Urls.MY_NOTIFICATIONS_HEROKU;
                 READ_NOTIFICATION_URL = Urls.READ_NOTIFICATION_HEROKU;
+                SENDING_NEW_MESSAGE = Urls.SENDING_NEW_MESSAGE_HEROKU;
         }
     }
 }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.os.ResultReceiver;
 import android.util.Log;
 
+import com.pollub.ikms.ikms_mobile.exceptions.AuthorizationException;
 import com.pollub.ikms.ikms_mobile.request.LoginRequest;
 import com.pollub.ikms.ikms_mobile.response.TokenResponse;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
@@ -20,6 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_ERROR;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_FINISHED;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_RUNNING;
+
 import lombok.SneakyThrows;
 
 /**
@@ -27,10 +32,6 @@ import lombok.SneakyThrows;
  */
 
 public class LoginService extends IntentService {
-
-    public static final int STATUS_RUNNING = 0;
-    public static final int STATUS_FINISHED = 1;
-    public static final int STATUS_ERROR = 2;
 
     private static final String TAG = "LoginService";
 
@@ -85,18 +86,6 @@ public class LoginService extends IntentService {
             return tokenResponse.getBody();
         } else {
             throw new AuthorizationException("Nie udało się zalogować");
-        }
-    }
-
-
-    public class AuthorizationException extends Exception {
-
-        public AuthorizationException(String message) {
-            super(message);
-        }
-
-        public AuthorizationException(String message, Throwable cause) {
-            super(message, cause);
         }
     }
 }

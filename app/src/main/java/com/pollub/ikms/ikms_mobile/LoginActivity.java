@@ -18,6 +18,10 @@ import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
 import com.pollub.ikms.ikms_mobile.service.LoginService;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_ERROR;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_FINISHED;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_RUNNING;
+
 public class LoginActivity extends AppCompatActivity implements RequestResultReceiver.Receiver {
 
     private Button buttonLogin;
@@ -92,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements RequestResultRec
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
         switch (resultCode) {
-            case LoginService.STATUS_RUNNING:
+            case STATUS_RUNNING:
                 progressDialog = new ProgressDialog(LoginActivity.this);
                 progressDialog.setTitle("Logowanie");
                 progressDialog.setMessage("Proszę czekać..");
@@ -101,12 +105,12 @@ public class LoginActivity extends AppCompatActivity implements RequestResultRec
                 progressDialog.show();
                 break;
 
-            case LoginService.STATUS_FINISHED:
+            case STATUS_FINISHED:
                 token = resultData.getString("result");
                 redirectToMyNotifications();
                 break;
 
-            case LoginService.STATUS_ERROR:
+            case STATUS_ERROR:
                 String statusCode = resultData.getString(Intent.EXTRA_TEXT);
                 progressDialog.dismiss();
                 Toast.makeText(this, "Niepoprawne dane logowania", Toast.LENGTH_SHORT).show();

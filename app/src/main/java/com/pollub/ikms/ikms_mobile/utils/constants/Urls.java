@@ -22,4 +22,7 @@ public final class Urls {
 
         public static final String PHONE_NUMBERS_HEROKU = HEROKU_DOMAIN + "api/employee/phoneNumbers";
         public static final String PHONE_NUMBERS_NGROK = NGROK_DOMAIN + "api/employee/phoneNumbers";
+
+        public static final String SENDING_NEW_MESSAGE_HEROKU = HEROKU_DOMAIN + "/api/message/user/%s";
+        public static final String SENDING_NEW_MESSAGE_NGROK = NGROK_DOMAIN + "/api/message/user/%s";
 }

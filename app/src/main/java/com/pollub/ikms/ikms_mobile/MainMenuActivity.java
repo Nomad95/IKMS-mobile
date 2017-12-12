@@ -19,6 +19,10 @@ import com.pollub.ikms.ikms_mobile.service.LoginService;
 import com.pollub.ikms.ikms_mobile.service.FetchNotificationsIntentService;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_ERROR;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_FINISHED;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_RUNNING;
+
 public class MainMenuActivity extends AppCompatActivity  implements RequestResultReceiver.Receiver{
 
     private String token;
@@ -131,7 +135,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
         switch (resultCode) {
-            case LoginService.STATUS_RUNNING:
+            case STATUS_RUNNING:
                 progressDialog = new ProgressDialog(MainMenuActivity.this);
                // progressDialog.setTitle("ładowanie");
                 progressDialog.setMessage("Ładowanie...");
@@ -140,7 +144,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
                 progressDialog.show();
                 break;
 
-            case LoginService.STATUS_FINISHED:
+            case STATUS_FINISHED:
                 allUnreadNotifications = resultData.getInt("unreadNotifications", 0);
                 if(allUnreadNotifications >0){
                     tvUnreadNotificationsQuantity.setText(Integer.toString(allUnreadNotifications));
@@ -151,7 +155,7 @@ public class MainMenuActivity extends AppCompatActivity  implements RequestResul
                     tvUnreadNotificationsQuantity.setVisibility(View.GONE);
                 break;
 
-            case LoginService.STATUS_ERROR:
+            case STATUS_ERROR:
                 String statusCode = resultData.getString(Intent.EXTRA_TEXT);
                 progressDialog.dismiss();
                 Toast.makeText(this, "Niepoprawne dane logowania", Toast.LENGTH_SHORT).show();

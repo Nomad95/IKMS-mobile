@@ -70,7 +70,7 @@ public class SendingMessageService extends IntentService {
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);
         token = prefs.getString(tokenKey, "");
 
-        final String url = String.format(UrlManager.getInstance().SENDING_NEW_MESSAGE, newMessageRequest.getRecipientUsername());
+        final String url = String.format(UrlManager.SENDING_NEW_MESSAGE, newMessageRequest.getRecipientUsername());
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 

@@ -24,10 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_ERROR;
-import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_FINISHED;
-import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_RUNNING;
-
 /**
  * Created by ATyKondziu on 18.11.2017.
  */

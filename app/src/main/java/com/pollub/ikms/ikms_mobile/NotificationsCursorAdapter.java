@@ -42,5 +42,13 @@ public class NotificationsCursorAdapter extends CursorAdapter {
         int contentColumn = cursor.getColumnIndex(NotificationsContract.NotificationsEntry.COLUMN_CONTENT);
         String contentText = cursor.getString(contentColumn);
         contentTextView.setText(contentText);
+
+        int isRead = cursor.getInt(cursor.getColumnIndex(NotificationsContract.NotificationsEntry.COLUMN_WAS_READ));
+
+        if(isRead == 1){
+            view.setBackgroundResource(R.drawable.read_notification);
+        }
+        else
+            view.setBackgroundResource(R.drawable.unread_notification);
     }
 }

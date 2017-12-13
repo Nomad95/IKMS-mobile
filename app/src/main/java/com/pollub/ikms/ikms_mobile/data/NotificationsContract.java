@@ -28,5 +28,8 @@ public class NotificationsContract {
         public final static String COLUMN_PRIORITY= "priority";
         public final static String COLUMN_SENDER_ID_COLUMN= "sender_id";
 
+        public static Uri TableAWithTABLEB() {
+            return NOTIFICATIONS_URI.buildUpon().appendPath(SendersContract.PATH_SENDERS).build();
+        }
     }
 }

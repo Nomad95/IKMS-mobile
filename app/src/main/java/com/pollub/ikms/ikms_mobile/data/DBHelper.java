@@ -1,9 +1,12 @@
 package com.pollub.ikms.ikms_mobile.data;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.pollub.ikms.ikms_mobile.NotificationAdapter;
 import com.pollub.ikms.ikms_mobile.model.NotificationItemModel;
 
 import java.util.ArrayList;
@@ -40,9 +43,9 @@ public class DBHelper extends SQLiteOpenHelper {
             + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_DATE_OF_SEND + " datetime not null,"
             + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_MESSAGE_CONTENT + " text, "
             + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_WAS_READ + " text, "
-            + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_USERNAME + " text"
-            + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_USERNAME + " text"
-            + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_FULL_NAME + " text"
+            + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_USERNAME + " text, "
+            + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_USERNAME + " text ,"
+            + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_FULL_NAME + " text, "
             + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_FULL_NAME + " text);";
 
     public final static String TABLE_SENT_MESSAGES_CREATE = "CREATE TABLE " + SentMessagesContract.SentMessagesEntry.TABLE_NAME + "("
@@ -53,9 +56,9 @@ public class DBHelper extends SQLiteOpenHelper {
             + SentMessagesContract.SentMessagesEntry.COLUMN_DATE_OF_SEND + " datetime not null,"
             + SentMessagesContract.SentMessagesEntry.COLUMN_MESSAGE_CONTENT + " text, "
             + SentMessagesContract.SentMessagesEntry.COLUMN_WAS_READ + " integer, "
-            + SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_USERNAME + " text"
-            + SentMessagesContract.SentMessagesEntry.COLUMN_SENDER_USERNAME + " text"
-            + SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_FULL_NAME + " text"
+            + SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_USERNAME + " text, "
+            + SentMessagesContract.SentMessagesEntry.COLUMN_SENDER_USERNAME + " text, "
+            + SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_FULL_NAME + " text, "
             + SentMessagesContract.SentMessagesEntry.COLUMN_SENDER_FULL_NAME + " text);";
 
     private static final String TABLE_SENDERS_DROP = "DROP TABLE IF EXISTS " + SendersContract.SendersEntry.TABLE_NAME;
@@ -90,7 +93,6 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public ArrayList<NotificationItemModel> getAllNotifications(){
-        return new ArrayList<>();
-    }
+
+
 }

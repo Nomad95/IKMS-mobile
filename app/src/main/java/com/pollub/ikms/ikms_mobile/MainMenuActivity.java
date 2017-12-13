@@ -16,7 +16,6 @@ import com.pollub.ikms.ikms_mobile.messagebox.MyMessagesListActivity;
 import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
 import com.pollub.ikms.ikms_mobile.service.FetchMessagesIntentService;
 import com.pollub.ikms.ikms_mobile.service.FetchNotificationsIntentService;
-import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
 public class MainMenuActivity extends AppCompatActivity implements RequestResultReceiver.Receiver {
 
@@ -53,8 +52,6 @@ public class MainMenuActivity extends AppCompatActivity implements RequestResult
 
         tvUnreadNotificationsQuantity = (TextView) findViewById(R.id.unread_notifications_counter);
         tvUnreadMessagesQuantity = (TextView) findViewById(R.id.unread_messages_counter);
-
-
 
         prefs = this.getSharedPreferences(
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);

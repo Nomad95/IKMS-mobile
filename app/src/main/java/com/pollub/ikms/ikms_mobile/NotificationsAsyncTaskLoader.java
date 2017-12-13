@@ -38,7 +38,7 @@ public class NotificationsAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Noti
             return notifications;
         }
 
-        @Override
+       /* @Override
         public void deliverResult(ArrayList<Friend> data) {
             super.deliverResult(data);
             Log.i(TAG, "deliver Result");
@@ -46,6 +46,6 @@ public class NotificationsAsyncTaskLoader extends AsyncTaskLoader<ArrayList<Noti
 
         public ArrayList<NotificationItemModel> getNotifications() {
            db.getReadableDatabase().;
-        }
-    }
+        }*/
+
 }

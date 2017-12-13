@@ -1,34 +1,24 @@
 package com.pollub.ikms.ikms_mobile;
 
 import android.app.LoaderManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TaskStackBuilder;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.pollub.ikms.ikms_mobile.model.NotificationItemModel;
-import com.pollub.ikms.ikms_mobile.response.NotificationResponse;
+import com.pollub.ikms.ikms_mobile.data.NotificationsContract;
 import com.pollub.ikms.ikms_mobile.response.NotificationGroupedBySender;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
-import com.pollub.ikms.ikms_mobile.utils.VocabularyCoordinator;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -38,8 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
 
 import lombok.SneakyThrows;
 
@@ -52,17 +40,11 @@ public class MyNotificationsListActivity extends AppCompatActivity implements Lo
 
     private ListView lv;
 
-    private NotificationAdapter adapter;
+    private NotificationsCursorAdapter notificationsCursorAdapter;
 
     private Cursor cursor;
 
     private static final int URL_LOADER = 0;
-
-    private ArrayList<NotificationItemModel> listOfNotificationsForListView = new ArrayList<>();
-
-    private NotificationGroupedBySender[] notifications;
-
-    private NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
     private ProgressDialog dialog;
     final int TWO_SECONDS = 2 * 1000;
@@ -78,190 +60,88 @@ public class MyNotificationsListActivity extends AppCompatActivity implements Lo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_notifications_list);
 
-        getLoaderManager().initLoader(URL_LOADER, null, this);
-        //ListView - set adapter
-        lv = (ListView) findViewById(R.id.lvNotifications);
-        adapter = new NotificationAdapter(this, cursor, false);
-        lv.setAdapter(adapter);
-
-        progressDialog = new ProgressDialog(MyNotificationsListActivity.this);
-        progressDialog.setMessage("Proszę czekać..");
-        progressDialog.setTitle("Logowanie");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(true);
         prefs = this.getSharedPreferences(
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);
         token = prefs.getString(tokenKey, "");
-        if (token.length() > 10) {
 
-            MyNotificationsListActivity.FetchNotificationsTask fetchNotificationsTask = new FetchNotificationsTask();
+        getLoaderManager().initLoader(URL_LOADER, null, this);
+        //ListView - set adapter
+        lv = (ListView) findViewById(R.id.lvNotifications);
 
-            notifications = fetchNotificationsTask.execute().get().getBody();
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationsCursorAdapter = new NotificationsCursorAdapter(this, cursor, false);
 
-            Intent notificationIntent = new Intent(this, MyNotificationsListActivity.class);
-            notificationIntent.putExtra("token", token);
-            for (int i = 0; i < notifications.length; i++) {
-                if (notifications[i].getNumberOfUnread() != 0) {
-                    builder.setColor(Color.BLACK)
-                            .setSmallIcon(R.drawable.notification_icon)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_icon_large))
-                            .setContentTitle(notifications[i].getSenderFullName());
-                }
+        lv.setAdapter(notificationsCursorAdapter);
 
-                int sizeOfNotificationsForCurrentAuthor = notifications[i].getNumberOfUnread();
-                if (notifications[i].getNumberOfUnread() > 1) {
-                    NotificationCompat.InboxStyle inboxStyle =
-                            new NotificationCompat.InboxStyle();
+        lv.setOnItemClickListener((adapterView, view, position, id) -> {
+            cursor = (Cursor) adapterView.getItemAtPosition(position);
+            Long notificationId = cursor.getLong(cursor.getColumnIndex(NotificationsContract.NotificationsEntry._ID));
 
-                    //inboxStyle.setBigContentTitle("Wszystkie powiadomienia:");
-                    for (NotificationResponse notification : notifications[i].getNotifications()) {
-                        listOfNotificationsForListView.add(new NotificationItemModel(
-                                notification.getId(),
-                                notifications[i].getSenderFullName(),
-                                notification.getContent(),
-                                notification.getWasRead()));
+            int isRead= cursor.getInt(cursor.getColumnIndex(NotificationsContract.NotificationsEntry.COLUMN_WAS_READ));
 
-                        if (!notification.getWasRead())
-                            inboxStyle.addLine(notification.getContent());
+            if (isRead==0) {
 
-                        builder.setContentText(
-                                sizeOfNotificationsForCurrentAuthor
-                                        + VocabularyCoordinator.changeTheNotificationWords(sizeOfNotificationsForCurrentAuthor));
-                    }
+                ReadNotificationTask readNotificationTask = new ReadNotificationTask(
+                        notificationId.intValue()
+                );
+                dialog = new ProgressDialog(MyNotificationsListActivity.this);
+                dialog.setMessage("Przetwarzanie...");
+                dialog.setCancelable(false);
+                dialog.show();
+                new Handler().postDelayed(() -> dialog.dismiss(), TWO_SECONDS);
+                String[] args = {String.valueOf(notificationId)};
+                ContentValues values = new ContentValues();
+                values.put(NotificationsContract.NotificationsEntry.COLUMN_WAS_READ,1);
+                getContentResolver().update(NotificationsContract.NotificationsEntry.NOTIFICATIONS_URI,values, NotificationsContract.NotificationsEntry._ID + " =?", args);
 
-                    builder.setStyle(inboxStyle);
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                readNotificationTask.execute();
 
-                    stackBuilder.addNextIntent(notificationIntent);
-
-                    PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    builder.setContentIntent(contentIntent);
-                    builder.mNumber = sizeOfNotificationsForCurrentAuthor;
-                } else if (notifications[i].getNumberOfUnread() == 1) {
-
-                    listOfNotificationsForListView.add(new NotificationItemModel(
-                            notifications[i].getNotifications().get(0).getId(),
-                            notifications[i].getSenderFullName(),
-                            notifications[i].getNotifications().get(0).getContent(),
-                            notifications[i].getNotifications().get(0).getWasRead()));
-
-                    builder.mNumber = 0;
-                    if (!notifications[i].getNotifications().get(0).getWasRead())
-                        builder.setContentText(notifications[i].getNotifications().get(0).getContent());
-
-                    notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
-                            | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(contentIntent);
-                } else {
-                    for (NotificationResponse notification : notifications[i].getNotifications()) {
-                        listOfNotificationsForListView.add(new NotificationItemModel(
-                                notification.getId(),
-                                notifications[i].getSenderFullName(),
-                                notification.getContent(),
-                                notification.getWasRead()));
-
-                    }
-                }
-                if (notifications[i].getNumberOfUnread() != 0) {
-                    builder.setAutoCancel(true)
-                            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
-                    mNotificationManager.notify(i, builder.build());
-
-
-                }
+                Intent intent = new Intent(MyNotificationsListActivity.this, MyNotificationsListActivity.class);
+                startActivity(intent);
             }
 
-            lv = (ListView) findViewById(R.id.lvNotifications);
-            adapter = new NotificationAdapter(this, 0, listOfNotificationsForListView);
-            lv.setAdapter(adapter);
-
-            lv.setOnItemClickListener((adapterView, view, index, l) -> {
-                NotificationItemModel item = listOfNotificationsForListView.get(index);
-                if (!item.isRead()) {
-
-                    ReadNotificationTask readNotificationTask = new ReadNotificationTask(
-                            item.getId().intValue()
-                    );
-
-                    NotificationManager mNotificationManager1 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                    dialog = new ProgressDialog(MyNotificationsListActivity.this);
-                    dialog.setMessage("Przetwarzanie...");
-                    dialog.setCancelable(false);
-                    dialog.show();
-                    new Handler().postDelayed(() -> dialog.dismiss(), TWO_SECONDS);
-
-                    readNotificationTask.execute();
-
-                    mNotificationManager1.cancel(item.getId().intValue());
-
-
-                    Intent intent = new Intent(MyNotificationsListActivity.this, MyNotificationsListActivity.class);
-
-                    //based on item add info to intent
-                    startActivity(intent);
-                }
-            });
-
-
-        }
-
+        });
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        CustomAsyncTaskLoader asyncTaskLoader = new CustomAsyncTaskLoader(this, friends);
-        asyncTaskLoader.forceLoad();
-        Log.i(TAG, "onCreateLoader");
-        return asyncTaskLoader;
+        String[] projection = {NotificationsContract.NotificationsEntry.COLUMN_CONTENT,
+                NotificationsContract.NotificationsEntry.TABLE_NAME + "." + NotificationsContract.NotificationsEntry._ID,
+                NotificationsContract.NotificationsEntry.COLUMN_WAS_READ};
+     return  new CursorLoader(
+                this,
+                NotificationsContract.NotificationsEntry.NOTIFICATIONS_URI,
+                projection,
+                null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
+        notificationsCursorAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        notificationsCursorAdapter.swapCursor(null);
     }
 
-
-    class FetchNotificationsTask extends AsyncTask<Void, Void, ResponseEntity<NotificationGroupedBySender[]>> {
-        @Override
-        protected ResponseEntity<NotificationGroupedBySender[]> doInBackground(Void... params) {
-            try {
-                //Pobieramy wszystkie powiadomienia dla danego użytkownika
-                String url = UrlManager.MY_NOTIFICATIONS_URL;
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.set("Auth-Token", token);
-
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                ResponseEntity<NotificationGroupedBySender[]> response = restTemplate
-                        .exchange(url, HttpMethod.GET, entity, NotificationGroupedBySender[].class);
-                return response;
-
-            } catch (Exception e) {
-                String message = e.getMessage();
-            }
-            return null;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            redirectToMainMenuActivity();
+            return true;
         }
 
-        @Override
-        protected void onPostExecute(ResponseEntity<NotificationGroupedBySender[]> result) {
-            super.onPostExecute(result);
-            HttpStatus status = result.getStatusCode();
-            NotificationGroupedBySender[] notification = result.getBody();
-            progressDialog.dismiss();
-        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void redirectToMainMenuActivity() {
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
+                | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+                | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        prefs.edit().putString(tokenKey, token).apply();
+        startActivityForResult(intent, 1);
+        finish();
     }
 
     class ReadNotificationTask extends AsyncTask<Void, Void, Void> {
@@ -289,25 +169,5 @@ public class MyNotificationsListActivity extends AppCompatActivity implements Lo
             }
             return null;
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            redirectToMainMenuActivity();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    public void redirectToMainMenuActivity() {
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
-                | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
-                | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        prefs.edit().putString(tokenKey, token).apply();
-        startActivityForResult(intent, 1);
-        finish();
     }
 }

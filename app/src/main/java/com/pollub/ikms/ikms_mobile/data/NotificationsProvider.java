@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,13 +18,21 @@ import static com.pollub.ikms.ikms_mobile.data.SendersContract.PATH_SENDERS;
  * Created by ATyKondziu on 29.11.2017.
  */
 
-public class NotificationsProvider  extends ContentProvider {
+public class NotificationsProvider extends ContentProvider {
 
     //constants for the operations
     private static final int NOTIFICATIONS = 1;
     private static final int NOTIFICATIONS_ID = 2;
     private static final int SENDERS = 3;
     private static final int SENDERS_ID = 4;
+
+
+    private final String MY_QUERY = "SELECT n." + NotificationsContract.NotificationsEntry._ID +
+            ", n." + NotificationsContract.NotificationsEntry.COLUMN_WAS_READ +
+            ", n." + NotificationsContract.NotificationsEntry.COLUMN_CONTENT +
+            ", s." + SendersContract.SendersEntry.COLUMN_SENDER_FULL_NAME +
+            " FROM notifications n INNER JOIN senders s ON n.sender_id=s._id";
+
 
     //urimatcher
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -56,7 +65,7 @@ public class NotificationsProvider  extends ContentProvider {
         int match = uriMatcher.match(uri);
         switch (match) {
             case NOTIFICATIONS:
-                cursor = db.query(NotificationsContract.NotificationsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, orderBy);
+                cursor = db.rawQuery(MY_QUERY, new String[]{});
                 break;
             case NOTIFICATIONS_ID:
                 cursor = db.query(NotificationsContract.NotificationsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, orderBy);
@@ -137,19 +146,19 @@ public class NotificationsProvider  extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         int match = uriMatcher.match(uri);
-        switch (match){
+        switch (match) {
             case NOTIFICATIONS:
                 return updateRecord(uri, values, selection, selectionArgs, NotificationsContract.NotificationsEntry.TABLE_NAME);
             case NOTIFICATIONS_ID:
                 selection = NotificationsContract.NotificationsEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateRecord(uri,values,selection,selectionArgs, NotificationsContract.NotificationsEntry.TABLE_NAME);
+                return updateRecord(uri, values, selection, selectionArgs, NotificationsContract.NotificationsEntry.TABLE_NAME);
             case SENDERS:
                 return updateRecord(uri, values, selection, selectionArgs, SendersContract.SendersEntry.TABLE_NAME);
             case SENDERS_ID:
                 selection = SendersContract.SendersEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateRecord(uri,values,selection,selectionArgs, SendersContract.SendersEntry.TABLE_NAME);
+                return updateRecord(uri, values, selection, selectionArgs, SendersContract.SendersEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Update unknown URI: " + uri);
         }
@@ -164,4 +173,18 @@ public class NotificationsProvider  extends ContentProvider {
         }
         return id;
     }
+
+  /*  static{
+        sTableAWithTABLEB = new SQLiteQueryBuilder();
+
+        //This is an inner join which looks like
+        //TableA INNER JOIN TABLEB ON TableA.id = TABLEB.TableA_id
+        sTableAWithTABLEB.setTables(
+                NotificationsContract.NotificationsEntry.TABLE_NAME + " INNER JOIN " +
+                        SentMessagesContract.SentMessagesEntry.TABLE_NAME +
+                        " ON " + NotificationsContract.NotificationsEntry.TABLE_NAME +
+                        "." + NotificationsContract.NotificationsEntry.COLUMN_SENDER_ID_COLUMN +
+                        " = " + SentMessagesContract.SentMessagesEntry.TABLE_NAME +
+                        "." + SentMessagesContract.SentMessagesEntry._ID);
+    }*/
 }

@@ -12,7 +12,9 @@ import android.support.v4.os.ResultReceiver;
 import android.util.Log;
 
 import com.pollub.ikms.ikms_mobile.data.MessagesQueryHandler;
+import com.pollub.ikms.ikms_mobile.data.ReceivedMessagesContract;
 import com.pollub.ikms.ikms_mobile.data.SendersContract;
+import com.pollub.ikms.ikms_mobile.data.SentMessagesContract;
 import com.pollub.ikms.ikms_mobile.response.MessageResponse;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
@@ -68,7 +70,9 @@ public class FetchMessagesIntentService extends IntentService {
         receiver.send(STATUS_RUNNING, messagesBundle);
         try {
             receivedMessages = getReceivedMessages();
+            saveReceivedMessagesToSQLITE(receivedMessages);
             sentMessages = getSentMessages();
+            saveSentMessagesToSQLITE(sentMessages);
             if (receivedMessages.length > 0 && sentMessages.length > 0) {
                 messagesBundle.putInt("unreadMessages", countAllUnreadMessages());
                 receiver.send(STATUS_FINISHED, messagesBundle);
@@ -143,12 +147,39 @@ public class FetchMessagesIntentService extends IntentService {
         }
     }
 
-    private void saveToSQLITE(MessageResponse[] messages) {
+    private void saveReceivedMessagesToSQLITE(MessageResponse[] messages) {
         for (MessageResponse message : messages) {
             ContentValues values = new ContentValues();
-            values.put(SendersContract.SendersEntry._ID, message.getId());
-            values.put(SendersContract.SendersEntry.COLUMN_SENDER_FULL_NAME, message.getSenderFullName());
-            handler.startInsert(1, null, SendersContract.SendersEntry.SENDERS_URI, values);
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry._ID, message.getId());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_ID, message.getSenderId());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_TITLE, message.getTitle());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_ID, message.getRecipientId());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_DATE_OF_SEND, message.getDateOfSend());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_MESSAGE_CONTENT, message.getMessageContent());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_WAS_READ, message.getWasRead());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_USERNAME, message.getRecipientUsername());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_USERNAME, message.getSenderUsername());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_RECIPIENT_FULL_NAME, message.getRecipientFullName());
+            values.put(ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_FULL_NAME, message.getSenderFullName());
+            handler.startInsert(1, null, ReceivedMessagesContract.ReceivedMessagesEntry.RECEIVED_MESSAGES_URI, values);
+        }
+    }
+
+    private void saveSentMessagesToSQLITE(MessageResponse[] messages) {
+        for (MessageResponse message : messages) {
+            ContentValues values = new ContentValues();
+            values.put(SentMessagesContract.SentMessagesEntry._ID, message.getId());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_SENDER_ID, message.getSenderId());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_TITLE, message.getTitle());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_ID, message.getRecipientId());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_DATE_OF_SEND, message.getDateOfSend());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_MESSAGE_CONTENT, message.getMessageContent());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_WAS_READ, message.getWasRead());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_USERNAME, message.getRecipientUsername());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_SENDER_USERNAME, message.getSenderUsername());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_RECIPIENT_FULL_NAME, message.getRecipientFullName());
+            values.put(SentMessagesContract.SentMessagesEntry.COLUMN_SENDER_FULL_NAME, message.getSenderFullName());
+            handler.startInsert(1, null, SentMessagesContract.SentMessagesEntry.SENT_MESSAGES_URI, values);
         }
     }
 }

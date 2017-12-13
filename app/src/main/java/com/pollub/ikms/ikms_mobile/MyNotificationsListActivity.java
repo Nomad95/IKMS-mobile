@@ -17,16 +17,13 @@ import android.view.KeyEvent;
 import android.widget.ListView;
 
 import com.pollub.ikms.ikms_mobile.data.NotificationsContract;
-import com.pollub.ikms.ikms_mobile.response.NotificationGroupedBySender;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.SneakyThrows;
@@ -130,7 +127,6 @@ public class MyNotificationsListActivity extends AppCompatActivity implements Lo
             redirectToMainMenuActivity();
             return true;
         }
-
         return super.onKeyDown(keyCode, event);
     }
 

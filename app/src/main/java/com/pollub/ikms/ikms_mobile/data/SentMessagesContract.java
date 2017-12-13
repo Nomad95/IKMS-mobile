@@ -32,6 +32,5 @@ public class SentMessagesContract {
         public final static String COLUMN_SENDER_USERNAME = "sender_username";
         public final static String COLUMN_RECIPIENT_FULL_NAME = "recipient_full_name";
         public final static String COLUMN_SENDER_FULL_NAME = "sender_full_name";
-        public final static String COLUMN_NUMBER_OF_UNREAD = "number_of_unread";
     }
 }

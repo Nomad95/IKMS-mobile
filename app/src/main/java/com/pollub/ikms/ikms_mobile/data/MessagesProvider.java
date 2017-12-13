@@ -85,7 +85,7 @@ public class MessagesProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
         switch (match) {
             case RECEIVED_MESSAGES:
-                return insertRecord(uri, contentValues, NotificationsContract.NotificationsEntry.TABLE_NAME);
+                return insertRecord(uri, contentValues, ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME);
             case SENT_MESSAGES:
                 return insertRecord(uri, contentValues, SentMessagesContract.SentMessagesEntry.TABLE_NAME);
             default:

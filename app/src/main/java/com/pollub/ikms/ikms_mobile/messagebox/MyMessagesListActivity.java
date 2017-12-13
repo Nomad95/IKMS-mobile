@@ -1,19 +1,16 @@
 package com.pollub.ikms.ikms_mobile.messagebox;
 
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.TabLayout;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
 import com.pollub.ikms.ikms_mobile.R;
 
 public class MyMessagesListActivity extends AppCompatActivity {
@@ -63,14 +60,11 @@ public class MyMessagesListActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.icon_outbox);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), SendingMessageActivity.class);
-                startActivityForResult(intent, 1);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), SendingMessageActivity.class);
+            startActivityForResult(intent, 1);
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-            }
         });
 
     }
@@ -105,12 +99,12 @@ public class MyMessagesListActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(android.support.v4.app.FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public android.support.v4.app.Fragment getItem(int position) {
             switch (position){
                 case 0:
                     InboxListFragment inboxListFragment = new InboxListFragment();

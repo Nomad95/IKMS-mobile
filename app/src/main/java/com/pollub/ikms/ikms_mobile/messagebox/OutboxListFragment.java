@@ -31,35 +31,40 @@ public class OutboxListFragment extends Fragment {
 
         MessageItemModel messageItemModel1 = new MessageItemModel();
         messageItemModel1.setId(1L);
-        messageItemModel1.setMessageContents("abradab1");
-        messageItemModel1.setTitle("Pierwsza wiadomość wysłana");
-        messageItemModel1.setRecipientFullName("Adrian Sarnecki");
-        messageItemModel1.setWasRead(true);
-        messageItemModel1.setDateOfSend("3:45");
+        messageItemModel1.setMessageContents("adasdasd");
+        messageItemModel1.setTitle("Zmiana toku terapii");
+        messageItemModel1.setRecipientFullName("Jagoda Wilk");
+        messageItemModel1.setRecipientUsername("admin");
+        messageItemModel1.setWasRead(false);
+        messageItemModel1.setDateOfSend("11:45");
 
         MessageItemModel messageItemModel2 = new MessageItemModel();
         messageItemModel2.setId(2L);
         messageItemModel2.setMessageContents("abradabdasdasdasdasdasdasdasdsasd");
-        messageItemModel2.setTitle("Druga wiadomość wysłana");
-        messageItemModel2.setRecipientFullName("Arek Boruch");
+        messageItemModel2.setTitle("Nieobecność w dniach 14-20 stycznia");
+        messageItemModel2.setRecipientFullName("Grzegorz Nowak");
+        messageItemModel2.setRecipientUsername("user1");
         messageItemModel2.setWasRead(false);
-        messageItemModel2.setDateOfSend("6.12.2017 3:45");
+        messageItemModel2.setDateOfSend("06.01.2017 16:45");
 
         MessageItemModel messageItemModel3 = new MessageItemModel();
         messageItemModel3.setId(3L);
         messageItemModel3.setMessageContents("abradab");
-        messageItemModel3.setTitle("Trzecia wiadomość wysłana");
-        messageItemModel3.setRecipientFullName("Jadwiga Paździerz");
-        messageItemModel3.setWasRead(false);
-        messageItemModel3.setDateOfSend("3.12.2017 4:00");
+        messageItemModel3.setTitle("Informacja o konsultacjach");
+        messageItemModel3.setRecipientFullName("Marysia Malinecka");
+        messageItemModel3.setRecipientUsername("admin");
+        messageItemModel3.setWasRead(true);
+        messageItemModel3.setDateOfSend("06.01.2018 16:01");
 
         MessageItemModel messageItemModel4 = new MessageItemModel();
         messageItemModel4.setId(4L);
         messageItemModel4.setMessageContents("dasdadassdasda");
-        messageItemModel4.setTitle("Czwarta wiadomość wysłana");
-        messageItemModel4.setRecipientFullName("Ktośy Ktoś");
+        messageItemModel4.setTitle("Dokumenty na konsultacje");
+        messageItemModel4.setRecipientFullName("Irmina Patios");
+        messageItemModel4.setRecipientUsername("user2");
         messageItemModel4.setWasRead(true);
-        messageItemModel4.setDateOfSend("1.12.2017 20:45");
+        messageItemModel4.setDateOfSend("05.01.2018 10:22");
+
 
         listOfMessageForListView.add(messageItemModel1);
         listOfMessageForListView.add(messageItemModel2);

@@ -32,44 +32,74 @@ public class InboxListFragment extends Fragment {
 
         MessageItemModel messageItemModel1 = new MessageItemModel();
         messageItemModel1.setId(1L);
-        messageItemModel1.setMessageContents("abradab1");
-        messageItemModel1.setTitle("Pierwsza wiadomość odebrana");
-        messageItemModel1.setSenderFullName("Adrian Sarnecki");
+        messageItemModel1.setMessageContents("Witam, \nPaństwa córce będzie potrzebne kilka zajęć w związku ze zdiagnozowaną na ostatnich badanich drobną dysfunkcję. \n\nPo więcej informacji zapraszam na konsultacje w czwartki w godzinach 15-16. \n \nJagoda Wilk - logopeda ");
+        messageItemModel1.setTitle("Dodatkowe zajęcia - dogoterapia ");
+        messageItemModel1.setSenderFullName("Jagoda Wilk");
         messageItemModel1.setSenderUsername("admin");
         messageItemModel1.setWasRead(true);
-        messageItemModel1.setDateOfSend("3:45");
+        messageItemModel1.setDateOfSend("11:45");
 
         MessageItemModel messageItemModel2 = new MessageItemModel();
         messageItemModel2.setId(2L);
         messageItemModel2.setMessageContents("abradabdasdasdasdasdasdasdasdsasd");
-        messageItemModel2.setTitle("Druga wiadomość odebrana");
-        messageItemModel2.setSenderFullName("Arek Boruch");
+        messageItemModel2.setTitle("Zajęcia na świeżym powietrzu");
+        messageItemModel2.setSenderFullName("Katarzyna Piórko");
         messageItemModel2.setSenderUsername("user1");
         messageItemModel2.setWasRead(false);
-        messageItemModel2.setDateOfSend("6.12.2017 3:45");
+        messageItemModel2.setDateOfSend("06.01.2017 16:45");
 
         MessageItemModel messageItemModel3 = new MessageItemModel();
         messageItemModel3.setId(3L);
         messageItemModel3.setMessageContents("abradab");
-        messageItemModel3.setTitle("Trzecia wiadomość odebrana");
-        messageItemModel3.setSenderFullName("Jadwiga Paździerz");
+        messageItemModel3.setTitle("Uwagi dotyczące zmiany planu terapii");
+        messageItemModel3.setSenderFullName("Arkadiusz Miłoszewski");
         messageItemModel3.setSenderUsername("admin");
         messageItemModel3.setWasRead(false);
-        messageItemModel3.setDateOfSend("3.12.2017 4:00");
+        messageItemModel3.setDateOfSend("06.01.2018 16:01");
 
         MessageItemModel messageItemModel4 = new MessageItemModel();
         messageItemModel4.setId(4L);
         messageItemModel4.setMessageContents("dasdadassdasda");
-        messageItemModel4.setTitle("Czwarta wiadomość odebrana");
-        messageItemModel4.setSenderFullName("Ktośy Ktoś");
-        messageItemModel4.setSenderUsername("user1");
+        messageItemModel4.setTitle("Dokumenty na konsultacje");
+        messageItemModel4.setSenderFullName("Irmina Patios");
+        messageItemModel4.setSenderUsername("user2");
         messageItemModel4.setWasRead(true);
-        messageItemModel4.setDateOfSend("1.12.2017 20:45");
+        messageItemModel4.setDateOfSend("05.01.2018 9:22");
+
+        MessageItemModel messageItemModel5 = new MessageItemModel();
+        messageItemModel5.setId(4L);
+        messageItemModel5.setMessageContents("dasdadassdasda");
+        messageItemModel5.setTitle("Uwagi dotyczące rozwoju dziecka");
+        messageItemModel5.setSenderFullName("Elzbieta Kawka");
+        messageItemModel5.setSenderUsername("user3");
+        messageItemModel5.setWasRead(true);
+        messageItemModel5.setDateOfSend("04.01.2018 10:11");
+
+        MessageItemModel messageItemModel6 = new MessageItemModel();
+        messageItemModel6.setId(4L);
+        messageItemModel6.setMessageContents("dasdadassdasda");
+        messageItemModel6.setTitle("Materiały dydaktyczne do domu");
+        messageItemModel6.setSenderFullName("Marek Berk");
+        messageItemModel6.setSenderUsername("user4");
+        messageItemModel6.setWasRead(true);
+        messageItemModel6.setDateOfSend("03.01.2018 15:20");
+
+        MessageItemModel messageItemModel7 = new MessageItemModel();
+        messageItemModel7.setId(5L);
+        messageItemModel7.setMessageContents("dasdadassdasda");
+        messageItemModel7.setTitle("Wiadomość powitalna");
+        messageItemModel7.setSenderFullName("Joanna Zielińska");
+        messageItemModel7.setSenderUsername("admin");
+        messageItemModel7.setWasRead(true);
+        messageItemModel7.setDateOfSend("03.01.2018 20:45");
 
         listOfMessageForListView.add(messageItemModel1);
         listOfMessageForListView.add(messageItemModel2);
         listOfMessageForListView.add(messageItemModel3);
         listOfMessageForListView.add(messageItemModel4);
+        listOfMessageForListView.add(messageItemModel5);
+        listOfMessageForListView.add(messageItemModel6);
+        listOfMessageForListView.add(messageItemModel7);
 
 
         lv = (ListView) rootView.findViewById(R.id.inbox_list);

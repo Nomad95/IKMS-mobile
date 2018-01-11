@@ -19,6 +19,7 @@ import com.pollub.ikms.ikms_mobile.request.NewMessageRequest;
 import com.pollub.ikms.ikms_mobile.service.SendingMessageService;
 
 import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_ERROR;
+import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_FINISHED;
 import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_RUNNING;
 
 public class SendingMessageActivity extends AppCompatActivity implements RequestResultReceiver.Receiver {
@@ -62,19 +63,14 @@ public class SendingMessageActivity extends AppCompatActivity implements Request
 
 
         sendButton = (Button) findViewById(R.id.send_new_msg);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NewMessageRequest newMessageRequest = new NewMessageRequest();
-                newMessageRequest.setRecipientUsername(recipientUsername.getText().toString());
-                newMessageRequest.setTitle(title.getText().toString());
-                newMessageRequest.setMessageContents(messageContents.getText().toString());
+        sendButton.setOnClickListener(view -> {
+            NewMessageRequest newMessageRequest = new NewMessageRequest();
+            newMessageRequest.setRecipientUsername(recipientUsername.getText().toString());
+            newMessageRequest.setTitle(title.getText().toString());
+            newMessageRequest.setMessageContents(messageContents.getText().toString());
 
-                startSendingMessage(newMessageRequest);
-            }
+            startSendingMessage(newMessageRequest);
         });
-
-
     }
 
     @Override
@@ -87,6 +83,9 @@ public class SendingMessageActivity extends AppCompatActivity implements Request
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(true);
                 progressDialog.show();
+                break;
+            case STATUS_FINISHED:
+                progressDialog.dismiss();
                 break;
             case STATUS_ERROR:
                 String statusCode = resultData.getString(Intent.EXTRA_TEXT);

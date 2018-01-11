@@ -71,7 +71,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        db = getWritableDatabase();
     }
 
     @Override
@@ -92,7 +91,4 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(TABLE_SENT_MESSAGES_DROP);
         onCreate(db);
     }
-
-
-
 }

@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,7 +53,7 @@ public class NotificationsProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         helper = new DBHelper(getContext());
-        return false;
+        return true;
     }
 
     @Nullable

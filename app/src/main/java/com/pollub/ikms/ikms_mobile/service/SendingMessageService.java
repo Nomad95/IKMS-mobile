@@ -13,7 +13,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.pollub.ikms.ikms_mobile.exceptions.AuthorizationException;
-import com.pollub.ikms.ikms_mobile.model.MessageItemModel;
 import com.pollub.ikms.ikms_mobile.request.NewMessageRequest;
 import com.pollub.ikms.ikms_mobile.response.MessageResponse;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
@@ -27,11 +26,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-
-import static com.pollub.ikms.ikms_mobile.utils.constants.StatusCode.STATUS_RUNNING;
 
 public class SendingMessageService extends IntentService {
+
+    public static final int STATUS_RUNNING = 6;
+    public static final int STATUS_FINISHED = 7;
+    public static final int STATUS_ERROR = 8;
 
     private static final String TAG = "SendingMessageService";
 
@@ -43,6 +43,7 @@ public class SendingMessageService extends IntentService {
 
     private ResponseEntity<MessageResponse> response;
 
+    MessageResponse messageResponse;
 
     public SendingMessageService() {
         super(TAG);
@@ -59,7 +60,10 @@ public class SendingMessageService extends IntentService {
         newMessageRequest.setMessageContents(intent.getExtras().getString("content"));
         Bundle newMessageBundle = new Bundle();
         receiver.send(STATUS_RUNNING, newMessageBundle);
-        sendMessage(newMessageRequest);
+        messageResponse = sendMessage(newMessageRequest);
+        if(messageResponse != null) {
+            receiver.send(STATUS_FINISHED, newMessageBundle);
+        }
         stopSelf();
     }
 
@@ -80,7 +84,7 @@ public class SendingMessageService extends IntentService {
 
         HttpEntity<NewMessageRequest> entity = new HttpEntity<>(newMessageRequest, headers);
         response = restTemplate.exchange(url, HttpMethod.POST, entity, MessageResponse.class );
-        if (response.getStatusCode().value() == 200) {
+        if (response.getStatusCode().value() == 201) {
             return response.getBody();
         } else {
             //todo [Arek] Trzeba by poczytać czy jest coś takiego podobnego do AdviceControllera który będzie wychwytywał wszystkie

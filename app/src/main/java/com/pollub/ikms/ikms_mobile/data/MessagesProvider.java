@@ -23,6 +23,16 @@ public class MessagesProvider extends ContentProvider {
     private static final int SENT_MESSAGES = 3;
     private static final int SENT_MESSAGES_ID = 4;
 
+    private final String MY_QUERY = "SELECT m." + ReceivedMessagesContract.ReceivedMessagesEntry._ID +
+            ", m." + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_WAS_READ +
+            ", m." + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_SENDER_FULL_NAME +
+            ", m." + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_TITLE +
+            ", m." + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_DATE_OF_SEND +
+            ", m." + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_MESSAGE_CONTENT +
+            ", m." + ReceivedMessagesContract.ReceivedMessagesEntry.COLUMN_DATE_OF_SEND +
+            " FROM " + ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME + " m";
+
+
     //urimatcher
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -43,18 +53,21 @@ public class MessagesProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         helper = new DBHelper(getContext());
-        return false;
+        return true;
     }
 
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String orderBy) {
-        SQLiteDatabase db = helper.getReadableDatabase();
+        SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor;
         int match = uriMatcher.match(uri);
         switch (match) {
             case RECEIVED_MESSAGES:
-                cursor = db.query(ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, orderBy);
+                 cursor = db.rawQuery(MY_QUERY, new String[]{});
+               // cursor = db.query(ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, orderBy);
+               cursor.moveToFirst();
+                Log.d("Cursor : ", cursor.toString());
                 break;
             case RECEIVED_MESSAGES_ID:
                 cursor = db.query(ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, orderBy);
@@ -94,7 +107,7 @@ public class MessagesProvider extends ContentProvider {
     }
 
     private Uri insertRecord(Uri uri, ContentValues values, String table) {
-        SQLiteDatabase db = helper.getReadableDatabase();
+        SQLiteDatabase db = helper.getWritableDatabase();
         long id = db.insert(table, null, values);
         if (id == -1) {
             Log.e("MessagesProvider", "Error insert " + uri);
@@ -135,26 +148,26 @@ public class MessagesProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         int match = uriMatcher.match(uri);
-        switch (match){
+        switch (match) {
             case RECEIVED_MESSAGES:
                 return updateRecord(uri, values, selection, selectionArgs, ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME);
             case RECEIVED_MESSAGES_ID:
                 selection = ReceivedMessagesContract.ReceivedMessagesEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateRecord(uri,values,selection,selectionArgs, ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME);
+                return updateRecord(uri, values, selection, selectionArgs, ReceivedMessagesContract.ReceivedMessagesEntry.TABLE_NAME);
             case SENT_MESSAGES:
                 return updateRecord(uri, values, selection, selectionArgs, SentMessagesContract.SentMessagesEntry.TABLE_NAME);
             case SENT_MESSAGES_ID:
                 selection = SentMessagesContract.SentMessagesEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateRecord(uri,values,selection,selectionArgs, SentMessagesContract.SentMessagesEntry.TABLE_NAME);
+                return updateRecord(uri, values, selection, selectionArgs, SentMessagesContract.SentMessagesEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Update unknown URI: " + uri);
         }
     }
 
     private int updateRecord(Uri uri, ContentValues values, String selection, String[] selectionArgs, String tableName) {
-        SQLiteDatabase db = helper.getReadableDatabase();
+        SQLiteDatabase db = helper.getWritableDatabase();
         int id = db.update(tableName, values, selection, selectionArgs);
         if (id == 0) {
             Log.e("MessagesProvider", "Error update" + uri);

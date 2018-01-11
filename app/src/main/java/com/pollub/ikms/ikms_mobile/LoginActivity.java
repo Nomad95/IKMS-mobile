@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.pollub.ikms.ikms_mobile.data.DBHelper;
+import com.pollub.ikms.ikms_mobile.data.DatabaseManager;
 import com.pollub.ikms.ikms_mobile.receiver.RequestResultReceiver;
 import com.pollub.ikms.ikms_mobile.service.LoginService;
 import com.pollub.ikms.ikms_mobile.utils.UrlManager;
@@ -38,12 +40,15 @@ public class LoginActivity extends AppCompatActivity implements RequestResultRec
     private SharedPreferences prefs;
 
     private String tokenKey = "com.pollub.ikms.ikms_mobile.token";
-
+    private static Context context;
+    private static DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+    context=getApplicationContext();
+        dbHelper = new DBHelper(context);
+        DatabaseManager.initializeInstance(dbHelper);
         prefs = this.getSharedPreferences(
                 "com.pollub.ikms.ikms_mobile", Context.MODE_PRIVATE);
         progressDialog = new ProgressDialog(LoginActivity.this);

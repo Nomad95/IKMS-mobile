@@ -6,7 +6,7 @@ package com.pollub.ikms.ikms_mobile.utils.constants;
 public final class Urls {
 
         public static final String HEROKU_DOMAIN = "https://ikmsdeploy.herokuapp.com//";
-        public static final String NGROK_DOMAIN = "https://6c101828.ngrok.io//";
+        public static final String NGROK_DOMAIN = "https://046c85c8.ngrok.io//";
 
         public static final String AUTH_LOGIN_HEROKU = HEROKU_DOMAIN + "auth/login";
         public static final String AUTH_LOGIN_NGROK = NGROK_DOMAIN + "auth/login";
@@ -29,6 +29,6 @@ public final class Urls {
         public static final String SENT_NEWEST_MESSAGES_HEROKU = HEROKU_DOMAIN + "api/message/myMessages/sent/mobile/newest/";
         public static final String SENT_NEWEST_MESSAGES_NGROK = NGROK_DOMAIN + "api/message/myMessages/sent/mobile/newest/";
 
-        public static final String SENDING_NEW_MESSAGE_HEROKU = HEROKU_DOMAIN + "/api/message/user/%s";
-        public static final String SENDING_NEW_MESSAGE_NGROK = NGROK_DOMAIN + "/api/message/user/%s";
+        public static final String SENDING_NEW_MESSAGE_HEROKU = HEROKU_DOMAIN + "/api/message/mobile/user/%s";
+        public static final String SENDING_NEW_MESSAGE_NGROK = NGROK_DOMAIN + "/api/message/mobile/user/%s";
 }
